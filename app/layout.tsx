@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import "../ged-landing.css";
+import "../src/ged-landing.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://ged.remparia.com"),
