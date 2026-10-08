@@ -1,7 +1,8 @@
+"use client";
+
 import { useEffect, useRef, useState } from "react";
 import { ScrollFilm } from "../components/ScrollFilm";
 import { FounderApplicationModal } from "../components/FounderApplicationModal";
-import "../ged-landing.css";
 
 const Arrow = ({ diagonal = false }: { diagonal?: boolean }) => <span aria-hidden="true">{diagonal ? "↗" : "→"}</span>;
 const Check = () => <span className="rg-check" aria-hidden="true">✓</span>;
@@ -205,17 +206,21 @@ function ProofStats({ lang }: { lang: Lang }) {
 }
 
 export function GedLandingPage() {
-  const [lang, setLang] = useState<Lang>(() => localStorage.getItem("remparia-lang") === "en" ? "en" : "fr");
+  const [lang, setLang] = useState<Lang>("fr");
   const [menuOpen, setMenuOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [applicationOpen, setApplicationOpen] = useState(false);
   const faqVideoRef = useRef<HTMLVideoElement>(null);
   const faqs = lang === "fr" ? faqsFr : faqsEn;
   useEffect(() => {
+    const stored = window.localStorage.getItem("remparia-lang");
+    if (stored === "en" || stored === "fr") setLang(stored);
+  }, []);
+  useEffect(() => {
     const originalTitle = document.title;
     document.title = lang === "fr" ? "Remparia GED — Vos documents, enfin utiles." : "Remparia DMS — Documents that work for you.";
     document.documentElement.lang = lang;
-    localStorage.setItem("remparia-lang", lang);
+    window.localStorage.setItem("remparia-lang", lang);
     document.body.classList.add("rg-landing-body");
     return () => { document.title = originalTitle; document.body.classList.remove("rg-landing-body"); };
   }, [lang]);

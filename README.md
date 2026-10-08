@@ -1,6 +1,6 @@
 # Remparia GED — landing page
 
-Public landing page for Remparia GED, with the founder-circle application form.
+Public landing page for Remparia GED (Next.js App Router), with the founder-circle application form.
 
 ## Prerequisites
 

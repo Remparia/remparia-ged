@@ -7,8 +7,10 @@ build
 .DS_Store
 coverage
 .vite
+.next
+out
 *.tsbuildinfo
 .turbo
-
 .pnpm-store
+
 

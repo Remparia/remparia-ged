@@ -157,7 +157,7 @@ body:has(.remparia-landing) { margin: 0; background: #eef4e0; }
 .rg-intro__copy p + p { margin-top: 20px; }
 .rg-product-layout { grid-column: 1 / -1; display: grid; grid-template-columns: .8fr 1.2fr; gap: 64px; margin-top: 20px; align-items: center; }
 .rg-workflow { display: flex; flex-direction: column; }
-.rg-workflow button { display: flex; align-items: start; gap: 18px; padding: 22px 0; background: transparent; border: 0; border-bottom: 1px solid var(--rg-line); text-align: left; opacity: .56; transition: opacity .2s; }
+.rg-workflow button { display: flex; align-items: flex-start; gap: 18px; padding: 22px 0; background: transparent; border: 0; border-bottom: 1px solid var(--rg-line); text-align: left; opacity: .56; transition: opacity .2s; }
 .rg-workflow button[aria-selected=true], .rg-workflow button:hover { opacity: 1; }
 .rg-workflow__number { font: 11px "IBM Plex Mono", monospace; margin-top: 7px; color: var(--rg-muted); }
 .rg-workflow h3 { font-size: 26px; line-height: 1.2; }
@@ -552,7 +552,7 @@ body:has(.remparia-landing) { margin: 0; background: #eef4e0; }
 .rg-application__head > p, .rg-application__success > p { color: var(--rg-muted); font-size: 12px; line-height: 1.7; max-width: 480px; margin-top: 20px; }
 .rg-application form { margin-top: 10px; }
 .rg-application fieldset { border: 0; padding: 34px 0; margin: 0; border-bottom: 1px solid var(--rg-line); }
-.rg-application legend { display: flex; align-items: start; gap: 14px; width: 100%; font-size: 17px; font-weight: 600; padding: 0 0 22px; }
+.rg-application legend { display: flex; align-items: flex-start; gap: 14px; width: 100%; font-size: 17px; font-weight: 600; padding: 0 0 22px; }
 .rg-application legend b { display: grid; place-items: center; width: 30px; height: 30px; flex: 0 0 auto; border: 1px solid #cad1c1; border-radius: 50%; font: 8px "IBM Plex Mono", monospace; }
 .rg-application legend span { display: flex; flex-direction: column; gap: 4px; }
 .rg-application legend small { color: var(--rg-muted); font-size: 10px; font-weight: 400; }
@@ -587,7 +587,7 @@ body:has(.remparia-landing) { margin: 0; background: #eef4e0; }
   display: grid;
   grid-template-columns: 1.05fr 1fr;
   gap: 56px 64px;
-  align-items: start;
+  align-items: flex-start;
 }
 .rg-faq__media {
   margin: 0;
@@ -720,7 +720,7 @@ body:has(.remparia-landing) { margin: 0; background: #eef4e0; }
   .rg-film--static { height: auto; }
   .rg-film--static .rg-film__sticky { height: auto; min-height: 0; }
   .rg-film--manual .rg-film__control { top: 12px; }
-  .rg-intro { grid-template-columns: 1fr; gap: 24px; align-items: start; }
+  .rg-intro { grid-template-columns: 1fr; gap: 24px; align-items: flex-start; }
   .rg-intro h2 { font-size: 36px; margin-top: 20px; }
   .rg-intro__copy { max-width: 100%; }
   .rg-intro__copy p { font-size: 13px; }
@@ -845,7 +845,7 @@ body:has(.remparia-landing) { margin: 0; background: #eef4e0; }
   .rg-faq__item h3 { font-size: 12px; }
   .rg-faq__item p { font-size: 11px; }
   .rg-footer { padding-block: 32px 22px; }
-  .rg-footer__top { flex-direction: column; align-items: start; gap: 20px; }
+  .rg-footer__top { flex-direction: column; align-items: flex-start; gap: 20px; }
   .rg-footer__top p { font-size: 11px; }
   .rg-footer__bottom { flex-wrap: wrap; font-size: 8px; row-gap: 12px; }
   .rg-footer__bottom > span:nth-child(2) { order: 3; width: 100%; }

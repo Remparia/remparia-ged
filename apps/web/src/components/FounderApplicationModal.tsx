@@ -1,3 +1,5 @@
+"use client";
+
 import { FormEvent, useEffect, useRef, useState } from "react";
 
 type Props = { open: boolean; onClose: () => void; lang?: "fr" | "en" };
