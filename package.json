@@ -7,8 +7,14 @@
   "scripts": {
     "dev": "pnpm --parallel --filter @rempatia/api --filter @rempatia/web run dev",
     "build": "pnpm -r run build",
+    "vercel-build": "node scripts/vercel-build.mjs",
     "test": "pnpm --filter @rempatia/api test && pnpm --filter @rempatia/web test:landing",
     "db:migrate": "pnpm --filter @rempatia/db migrate"
+  },
+  "dependencies": {
+    "next": "^15.2.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "engines": {
     "node": ">=20"

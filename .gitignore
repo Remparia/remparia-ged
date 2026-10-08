@@ -9,8 +9,10 @@ coverage
 .vite
 .next
 out
+/public
 *.tsbuildinfo
 .turbo
 .pnpm-store
+
 
 
