@@ -1,0 +1,16 @@
+{
+  "name": "rempatia-ged-landing",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Remparia GED landing page",
+  "packageManager": "pnpm@9.15.4",
+  "scripts": {
+    "dev": "pnpm --parallel --filter @rempatia/api --filter @rempatia/web run dev",
+    "build": "pnpm -r run build",
+    "test": "pnpm --filter @rempatia/api test && pnpm --filter @rempatia/web test:landing",
+    "db:migrate": "pnpm --filter @rempatia/db migrate"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
