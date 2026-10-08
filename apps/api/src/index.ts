@@ -10,9 +10,10 @@ async function main() {
   await app.register(cors, { origin: config.corsOrigin });
 
   app.setErrorHandler((err, _req, reply) => {
-    const status = (err as { statusCode?: number }).statusCode ?? 500;
+    const error = err as Error & { statusCode?: number };
+    const status = error.statusCode ?? 500;
     reply.status(status).send({
-      error: err.message || "Internal error",
+      error: error.message || "Internal error",
       statusCode: status,
     });
   });
