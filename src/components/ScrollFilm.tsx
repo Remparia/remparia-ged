@@ -78,7 +78,7 @@ export function ScrollFilm({ lang = "fr" }: { lang?: "fr" | "en" }) {
   return (
     <section ref={section} id="experience" className={`rg-film ${manual || reducedMotion ? "rg-film--manual" : ""} ${reducedMotion || failed ? "rg-film--static" : ""}`} aria-label={lang === "fr" ? "L’expérience Remparia, animée au défilement" : "The Remparia experience, animated on scroll"}>
       <div className="rg-film__sticky">
-        <div className="rg-film__topline"><span>{lang === "fr" ? "VOS DOCUMENTS. À PORTÉE DE QUESTION." : "YOUR DOCUMENTS. READY FOR QUESTIONS."}</span><span className="rg-film__hint">{manual || reducedMotion ? (lang === "fr" ? "LECTURE LIBRE" : "FREE PLAYBACK") : (lang === "fr" ? "LE FILM SUIT VOTRE SCROLL" : "THE FILM FOLLOWS YOUR SCROLL")} <span aria-hidden="true">↓</span></span></div>
+        <div className="rg-film__topline"><span>{lang === "fr" ? "VOS DOCUMENTS. À PORTÉE DE QUESTION." : "YOUR DOCUMENTS. READY FOR QUESTIONS."}</span></div>
         <div className="rg-film__stage">
           {failed ? <img src="/assets/ged/ged-scroll-poster.jpg" alt={lang === "fr" ? "Une professionnelle accède à son univers documentaire depuis son téléphone" : "A professional accesses her document workspace from her phone"} /> : (
             <video ref={video} src="/assets/ged/ged-scroll.mp4" poster="/assets/ged/ged-scroll-poster.jpg" muted playsInline preload="auto" controls={manual || reducedMotion} onError={() => setFailed(true)} aria-label={lang === "fr" ? "Une professionnelle interroge ses documents depuis son ordinateur" : "A professional asks questions of her documents from her computer"} />

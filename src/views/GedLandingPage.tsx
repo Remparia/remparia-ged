@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { CookieBanner, openCookiePreferences } from "../components/CookieBanner";
+import { EcosystemMap } from "../components/EcosystemMap";
 import { ScrollFilm } from "../components/ScrollFilm";
 import { FounderApplicationModal } from "../components/FounderApplicationModal";
 
@@ -177,8 +178,6 @@ const copy = {
       eyebrow: "07 / COMMENCER SIMPLE. VOIR PLUS LOIN.",
       title: <>Votre GED aujourd’hui.<br /><span>Votre OS demain.</span></>,
       body: "Pas besoin d’acheter une plateforme entière pour commencer. Vos documents sont la première étape d’un environnement qui pourra relier vos équipes, vos outils et vos actions.",
-      ecoAlt: "Schéma Remparia GED : déposer, comprendre, agir, créer des dossiers vivants et conserver les preuves, jusqu’à RempariaOS.",
-      ecoCaption: "Déposer, comprendre, agir, constituer un dossier vivant et garder la preuve — puis étendre vers RempariaOS.",
       steps: [
         { label: "LE POINT DE DÉPART", title: "Remparia GED", text: "Rassembler, classer,\nretrouver les informations.", phase: "PROGRAMME PILOTE", future: false },
         { label: "L’ÉTAPE SUIVANTE", title: "Des dossiers vivants", text: "Relier les pièces, les échéances,\nles responsables et les validations.", phase: "EXTENSION PROGRESSIVE", future: true },
@@ -401,8 +400,6 @@ const copy = {
       eyebrow: "07 / START SIMPLE. THINK AHEAD.",
       title: <>Your DMS today.<br /><span>Your OS tomorrow.</span></>,
       body: "You do not need to buy an entire platform to get started. Your documents are the first step toward an environment connecting your teams, tools and actions.",
-      ecoAlt: "Remparia DMS diagram: upload, understand, act, create living files and retain evidence, through to RempariaOS.",
-      ecoCaption: "Upload, understand, act, create a living file and retain evidence—then extend to RempariaOS.",
       steps: [
         { label: "THE STARTING POINT", title: "Remparia DMS", text: "Gather, organize and\nfind information.", phase: "PILOT PROGRAM", future: false },
         { label: "THE NEXT STEP", title: "Living files", text: "Connect documents, deadlines,\nowners and approvals.", phase: "PROGRESSIVE EXTENSION", future: true },
@@ -488,20 +485,6 @@ const connectors = [
   { id: "docusign", name: "DocuSign", ext: "svg", groupFr: "Signature", groupEn: "E-signature" },
   { id: "adobe", name: "Adobe Sign", ext: "svg", groupFr: "Signature", groupEn: "E-signature" },
 ] as const;
-
-function EcosystemMap({ alt, caption }: { alt: string; caption: string }) {
-  return (
-    <figure className="rg-eco" aria-labelledby="eco-caption">
-      <img
-        className="rg-eco__image"
-        src="/assets/ged/remparia-ecosystem.png?v=4"
-        alt={alt}
-        loading="lazy"
-      />
-      <figcaption id="eco-caption" className="rg-eco__caption">{caption}</figcaption>
-    </figure>
-  );
-}
 
 export function GedLandingPage() {
   const [lang, setLang] = useState<Lang>("fr");
@@ -839,7 +822,7 @@ export function GedLandingPage() {
               <h2>{t.os.title}</h2>
               <p>{t.os.body}</p>
             </div>
-            <EcosystemMap alt={t.os.ecoAlt} caption={t.os.ecoCaption} />
+            <EcosystemMap lang={lang} />
             <div className="rg-os__roadmap">
               {t.os.steps.flatMap((step, index) => {
                 const card = (
