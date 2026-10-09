@@ -343,8 +343,29 @@ body:has(.remparia-landing) { margin: 0; background: #eef4e0; }
 .rg-trust__copy > p { font-size: 13px; color: var(--rg-muted); max-width: 380px; margin-top: 22px; }
 .rg-trust-item { display: flex; gap: 13px; margin-top: 24px; }
 .rg-trust-item .rg-check { width: 21px; height: 21px; font-size: 10px; }
-.rg-trust-item h3 { font-size: 16px; letter-spacing: -.02em; line-height: 1.35; }
+.rg-trust-item h3 {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  letter-spacing: -.02em;
+  line-height: 1.35;
+}
 .rg-trust-item p { font-size: 11px; color: var(--rg-muted); margin-top: 6px; max-width: 350px; }
+.rg-france-flag {
+  display: inline-block;
+  flex: 0 0 auto;
+  width: 18px;
+  height: 12px;
+  border-radius: 2px;
+  box-shadow: inset 0 0 0 1px rgba(16, 19, 12, 0.12);
+  vertical-align: -1px;
+}
+.rg-hero__eyebrow .rg-france-flag {
+  width: 16px;
+  height: 11px;
+  margin-left: 2px;
+}
 .rg-trust .rg-text-link { margin-top: 30px; }
 
 .rg-os { background: #e5edcf; border-block: 1px solid var(--rg-line); }

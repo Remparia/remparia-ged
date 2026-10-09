@@ -14,6 +14,13 @@ const OutlineCheck = () => (
     </svg>
   </span>
 );
+const FranceFlag = () => (
+  <svg className="rg-france-flag" viewBox="0 0 3 2" width="18" height="12" aria-hidden="true" focusable="false">
+    <rect width="1" height="2" x="0" fill="#002395" />
+    <rect width="1" height="2" x="1" fill="#fff" />
+    <rect width="1" height="2" x="2" fill="#ed2939" />
+  </svg>
+);
 export type Lang = "fr" | "en";
 
 const copy = {
@@ -578,7 +585,7 @@ export function GedLandingPage() {
           </div>
           <div className="rg-hero__inner rg-container">
             <div className="rg-hero__copy">
-              <span className="rg-eyebrow rg-hero__eyebrow"><i />{t.hero.eyebrow}</span>
+              <span className="rg-eyebrow rg-hero__eyebrow"><i />{t.hero.eyebrow} <FranceFlag /></span>
               <h1>
                 {t.hero.titleBefore}
                 <br />
@@ -884,7 +891,10 @@ export function GedLandingPage() {
               <div className="rg-trust-item" key={item.n}>
                 <span className="rg-trust-item__num">{item.n}</span>
                 <div>
-                  <h3>{item.h}</h3>
+                  <h3>
+                    {item.h}
+                    {item.n === "01" ? <>{" "}<FranceFlag /></> : null}
+                  </h3>
                   <p>{item.p}</p>
                 </div>
               </div>
