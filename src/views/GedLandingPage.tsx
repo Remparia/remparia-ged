@@ -6,204 +6,423 @@ import { FounderApplicationModal } from "../components/FounderApplicationModal";
 
 const Arrow = ({ diagonal = false }: { diagonal?: boolean }) => <span aria-hidden="true">{diagonal ? "↗" : "→"}</span>;
 const Check = () => <span className="rg-check" aria-hidden="true">✓</span>;
+const OutlineCheck = () => (
+  <span className="rg-check-outline" aria-hidden="true">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+      <path d="M3.2 7.2 5.8 9.7 10.8 4.2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  </span>
+);
 export type Lang = "fr" | "en";
 
-const workflowFr = [
-  { name: "Déposez", description: "Vos contrats, factures et attestations réunis au même endroit.", title: "Tout commence par un document.", label: "NOUVEAU DOCUMENT", file: "Assurance_RC_Pro.pdf", folder: "Boîte de réception", detail: "PDF · 4 pages", result: "Un espace commun, sans une nouvelle arborescence à gérer." },
-  { name: "Organisez", description: "Le bon nom, le bon dossier, les informations qui comptent.", title: "Une place pour chaque pièce.", label: "CLASSEMENT PROPOSÉ", file: "Assurance RC Pro — Atelier Martin", folder: "Entreprise / Assurances", detail: "Type : attestation d’assurance", result: "Vérifiez la proposition. Corrigez-la si besoin. Vous gardez la main." },
-  { name: "Anticipez", description: "Les dates utiles remontent. Les points à vérifier ne se perdent plus.", title: "L’échéance ne reste plus cachée.", label: "POINT À SUIVRE", file: "Renouveler l’assurance RC Pro", folder: "Échéance : 31 décembre 2026", detail: "Responsable : direction administrative", result: "Une information dans un PDF devient un suivi clair pour votre équipe." },
-  { name: "Retrouvez", description: "Posez une question. Revenez directement à la source.", title: "La bonne information, sans fouiller.", label: "RÉPONSE SOURCÉE", file: "Votre RC Pro expire le 31 décembre 2026.", folder: "Source : Assurance_RC_Pro.pdf · page 2", detail: "Extrait : « Période de garantie […] 31/12/2026 »", result: "Une réponse vérifiable, construite à partir des documents accessibles." },
-];
-
-const workflowEn = [
-  { name: "Upload", description: "Contracts, invoices and certificates gathered in one place.", title: "It all starts with a document.", label: "NEW DOCUMENT", file: "Professional_Insurance.pdf", folder: "Inbox", detail: "PDF · 4 pages", result: "One shared space, without another folder tree to manage." },
-  { name: "Organize", description: "The right name, the right folder, and the information that matters.", title: "A place for every document.", label: "SUGGESTED FILING", file: "Professional Insurance — Martin Workshop", folder: "Company / Insurance", detail: "Type: insurance certificate", result: "Review the suggestion. Correct it if needed. You stay in control." },
-  { name: "Anticipate", description: "Important dates surface. Points to review are never lost.", title: "Deadlines no longer stay hidden.", label: "FOLLOW-UP", file: "Renew professional insurance", folder: "Due: December 31, 2026", detail: "Owner: administration", result: "Information buried in a PDF becomes a clear follow-up for your team." },
-  { name: "Find", description: "Ask a question. Go straight back to the source.", title: "The right information, without digging.", label: "SOURCED ANSWER", file: "Your professional insurance expires on December 31, 2026.", folder: "Source: Professional_Insurance.pdf · page 2", detail: "Excerpt: “Coverage period […] 12/31/2026”", result: "A verifiable answer, built from the documents you can access." },
-];
-
-const casesFr = [
-  { name: "BTP & terrain", role: "POUR LES ÉQUIPES QUI NE SONT PAS TOUJOURS AU BUREAU", title: "Le chantier avance. Les documents suivent.", description: "Attestations, contrats de sous-traitance, assurances : retrouvez la pièce demandée sans appeler trois personnes.", question: "Est-ce que l’assurance du sous-traitant est encore valide ?", answer: "L’attestation fournie couvre la période jusqu’au 31 décembre 2026. Vérifiez que les activités garanties correspondent au chantier.", source: "Attestation_RC_Sous-traitant.pdf · p. 1–2", next: "Préparer une demande de renouvellement", files: ["Assurances", "Sous-traitants", "Dossiers chantier"] },
-  { name: "Services & PME", role: "POUR LES DIRIGEANTS ET ÉQUIPES ADMINISTRATIVES", title: "Moins de recherche. Plus de temps pour vos clients.", description: "Contrats clients, factures et avenants restent reliés. Une nouvelle personne retrouve le contexte, pas seulement un fichier.", question: "Quel préavis prévoit notre contrat avec Studio Nord ?", answer: "Le contrat prévoit un préavis de 60 jours avant la date de renouvellement. L’avenant consulté ne modifie pas cette clause.", source: "Contrat_Studio_Nord.pdf · p. 6 + Avenant.pdf · p. 2", next: "Préparer un point avant renouvellement", files: ["Contrats clients", "Factures", "Avenants"] },
-  { name: "Cabinets & conseils", role: "POUR CEUX QUI ACCOMPAGNENT LES ENTREPRISES", title: "Le contexte d’un dossier, enfin à portée de main.", description: "Centralisez les pièces transmises, identifiez les éléments à vérifier et revenez à la preuve lorsque vous préparez un échange.", question: "Quelle pièce manque dans le dossier Atelier Martin ?", answer: "Dans cet exemple, la liste des pièces attendues indique une attestation d’assurance actualisée. Le dossier contient uniquement la version précédente.", source: "Liste_des_pièces.pdf · p. 1 + Attestation_2025.pdf", next: "Préparer une demande de pièce au client", files: ["Pièces clients", "Courriers", "Échéances"] },
-];
-
-const casesEn = [
-  { name: "Construction & field", role: "FOR TEAMS THAT ARE NOT ALWAYS AT A DESK", title: "The project moves forward. The documents follow.", description: "Certificates, subcontractor agreements and insurance: find the requested document without calling three people.", question: "Is the subcontractor’s insurance still valid?", answer: "The certificate provided covers the period through December 31, 2026. Check that the insured activities match the project.", source: "Subcontractor_Insurance.pdf · pp. 1–2", next: "Prepare a renewal request", files: ["Insurance", "Subcontractors", "Project files"] },
-  { name: "Services & SMEs", role: "FOR LEADERS AND ADMINISTRATIVE TEAMS", title: "Less searching. More time for your clients.", description: "Client contracts, invoices and amendments stay connected. A new team member finds the context, not just a file.", question: "What notice period is required by our Studio Nord contract?", answer: "The contract requires 60 days’ notice before renewal. The reviewed amendment does not change this clause.", source: "Studio_Nord_Contract.pdf · p. 6 + Amendment.pdf · p. 2", next: "Prepare a pre-renewal review", files: ["Client contracts", "Invoices", "Amendments"] },
-  { name: "Advisory firms", role: "FOR THOSE WHO SUPPORT BUSINESSES", title: "The context of every case, finally within reach.", description: "Centralize submitted documents, identify what needs review and return to the evidence when preparing a discussion.", question: "Which document is missing from the Martin Workshop file?", answer: "In this example, the required-document list calls for an updated insurance certificate. The file only contains the previous version.", source: "Required_documents.pdf · p. 1 + Certificate_2025.pdf", next: "Prepare a document request for the client", files: ["Client documents", "Letters", "Deadlines"] },
-];
-
-const faqsFr = [
-  ["Est-ce une GED ou un assistant IA ?", "Les deux, avec une priorité : vos documents. La GED les organise et les rend accessibles. L’assistant vous aide à retrouver une information avec ses sources. L’évolution vers RempariaOS ajoute progressivement des workflows et des actions dans vos outils."],
-  ["Que comprend le cercle fondateur ?", "Une inscription à la liste prioritaire, puis un échange individuel pour comprendre votre organisation documentaire. Quelques dirigeants seront invités à participer aux entretiens et ateliers de co-construction. Il ne s’agit ni d’un achat, ni d’un engagement commercial."],
-  ["L’IA peut-elle accéder à tous mes documents ?", "Non. Les permissions doivent s’appliquer avant la recherche et avant l’envoi de contexte à un modèle. Un utilisateur ne doit obtenir des réponses qu’à partir des documents auxquels il a accès. Les choix d’hébergement et de traitement sont cadrés avant le dépôt de documents réels."],
-  ["Dois-je remplacer mes outils actuels ?", "Non. Le premier pilote porte sur un ensemble limité de documents. Les connexions aux autres outils et l’orchestration RempariaOS sont des extensions à définir ensuite, selon vos besoins — pas une migration imposée dès le départ."],
-];
-
-const faqsEn = [
-  ["Is this a DMS or an AI assistant?", "Both, with one priority: your documents. The DMS organizes them and makes them accessible. The assistant helps you find information with its sources. RempariaOS progressively adds workflows and actions across your tools."],
-  ["What does the founding circle include?", "Priority-list registration followed by a one-to-one conversation to understand how your documents are managed. A small number of leaders will be invited to interviews and co-design workshops. It is neither a purchase nor a commercial commitment."],
-  ["Can the AI access all my documents?", "No. Permissions must apply before search and before any context is sent to a model. Users only receive answers based on documents they are allowed to access. Hosting and processing choices are agreed before real documents are uploaded."],
-  ["Do I need to replace my current tools?", "No. The first pilot covers a limited set of documents. Connections to other tools and RempariaOS orchestration can be defined later according to your needs—not imposed as an upfront migration."],
-];
-
-function ProductPreview({ lang }: { lang: Lang }) {
-  const [step, setStep] = useState(0);
-  const workflow = lang === "fr" ? workflowFr : workflowEn;
-  const item = workflow[step];
-  return <div className="rg-product-layout">
-    <div className="rg-workflow" role="tablist" aria-label={lang === "fr" ? "Le parcours d’un document" : "A document’s journey"}>
-      {workflow.map((stage, index) => <button type="button" key={stage.name} role="tab" id={`workflow-tab-${index}`} aria-selected={step === index} aria-controls="workflow-panel" tabIndex={step === index ? 0 : -1} onClick={() => setStep(index)} onKeyDown={event => { if (["ArrowDown", "ArrowRight", "ArrowUp", "ArrowLeft", "Home", "End"].includes(event.key)) { event.preventDefault(); const next = event.key === "Home" ? 0 : event.key === "End" ? 3 : (step + (["ArrowDown", "ArrowRight"].includes(event.key) ? 1 : 3)) % 4; setStep(next); document.getElementById(`workflow-tab-${next}`)?.focus(); } }}>
-        <span className="rg-workflow__number">0{index + 1}</span><div><h3>{stage.name}</h3><p>{stage.description}</p></div><Arrow />
-      </button>)}
-    </div>
-    <div className="rg-product" id="workflow-panel" role="tabpanel" aria-labelledby={`workflow-tab-${step}`}>
-      <div className="rg-product__chrome"><span className="rg-mini-brand">r<span>●</span></span><span>{lang === "fr" ? "MON ESPACE DOCUMENTAIRE" : "MY DOCUMENT WORKSPACE"}</span><span className="rg-status-dot">{lang === "fr" ? "Exemple illustratif" : "Illustrative example"}</span></div>
-      <div className="rg-product__body" key={step}>
-        <div className="rg-product__breadcrumb">Atelier Martin <span>/</span> Documents</div>
-        <h3>{item.title}</h3>
-        <div className={`rg-file-card rg-file-card--${step}`}><div className="rg-paper" aria-hidden="true"><i /><i /><i /><span>PDF</span></div><span className="rg-eyebrow">{item.label}</span><h4>{item.file}</h4><p>{item.folder}</p><small>{item.detail}</small><div className="rg-file-card__status"><Check /> {lang === "fr" ? (step === 0 ? "Prêt à être analysé" : step === 1 ? "À confirmer par votre équipe" : step === 2 ? "Suivi à préparer" : "Source disponible") : (step === 0 ? "Ready for analysis" : step === 1 ? "To be confirmed by your team" : step === 2 ? "Follow-up to prepare" : "Source available")}</div></div>
-        <p className="rg-product__note"><span aria-hidden="true">↳</span>{item.result}</p>
-      </div>
-      <div className="rg-product__bottom"><span>{lang === "fr" ? "DOCUMENT → INFORMATION → SUIVI" : "DOCUMENT → INFORMATION → FOLLOW-UP"}</span><span>0{step + 1} / 04</span></div>
-    </div>
-  </div>;
-}
-
-function EcosystemMap({ lang }: { lang: Lang }) {
-  return <figure className="rg-eco" aria-labelledby="eco-caption">
-    <img
-      className="rg-eco__image"
-      src="/assets/ged/remparia-ecosystem.png?v=4"
-      alt={lang === "fr" ? "Schéma Remparia GED : déposer, comprendre, agir, créer des dossiers vivants et conserver les preuves, jusqu’à RempariaOS." : "Remparia DMS diagram: upload, understand, act, create living files and retain evidence, through to RempariaOS."}
-      loading="lazy"
-    />
-    <figcaption id="eco-caption" className="rg-eco__caption">{lang === "fr" ? "Déposer, comprendre, agir, constituer un dossier vivant et garder la preuve — puis étendre vers RempariaOS." : "Upload, understand, act, create a living file and retain evidence—then extend to RempariaOS."}</figcaption>
-  </figure>;
-}
-
-const connectors = [
-  { id: "sharepoint", name: "SharePoint", ext: "svg", groupFr: "Microsoft 365", groupEn: "Microsoft 365" },
-  { id: "onedrive", name: "OneDrive", ext: "svg", groupFr: "Microsoft 365", groupEn: "Microsoft 365" },
-  { id: "outlook", name: "Outlook", ext: "svg", groupFr: "Email", groupEn: "Email" },
-  { id: "gdrive", name: "Google Drive", ext: "svg", groupFr: "Google", groupEn: "Google" },
-  { id: "gmail", name: "Gmail", ext: "svg", groupFr: "Email", groupEn: "Email" },
-  { id: "dropbox", name: "Dropbox", ext: "svg", groupFr: "Stockage", groupEn: "Storage" },
-  { id: "box", name: "Box", ext: "svg", groupFr: "Stockage", groupEn: "Storage" },
-  { id: "sage", name: "Sage", ext: "svg", groupFr: "ERP", groupEn: "ERP" },
-  { id: "cegid", name: "Cegid", ext: "png", groupFr: "ERP", groupEn: "ERP" },
-  { id: "sap", name: "SAP", ext: "svg", groupFr: "ERP", groupEn: "ERP" },
-  { id: "docusign", name: "DocuSign", ext: "svg", groupFr: "Signature", groupEn: "E-signature" },
-  { id: "adobe", name: "Adobe Sign", ext: "svg", groupFr: "Signature", groupEn: "E-signature" },
-] as const;
-
-function Connectors({ lang }: { lang: Lang }) {
-  return <section className="rg-section rg-connectors" id="connexions">
-    <div className="rg-section-head">
-      <span className="rg-eyebrow">{lang === "fr" ? "04 / LÀ OÙ VIVENT DÉJÀ VOS DOCUMENTS" : "04 / WHERE YOUR DOCUMENTS ALREADY LIVE"}</span>
-      <h2>{lang === "fr" ? <>Se connecter<br /><span>sans tout migrer.</span></> : <>Connect<br /><span>without a full migration.</span></>}</h2>
-      <p>{lang === "fr"
-        ? "Remparia GED peut s’appuyer sur vos outils existants pour récupérer, classer et rendre utiles les documents — emails, drives, ERP ou signatures."
-        : "Remparia DMS can connect to your existing tools to retrieve, organize and make documents useful—email, drives, ERPs or e-signatures."}</p>
-    </div>
-    <ul className="rg-connectors__grid" aria-label={lang === "fr" ? "Outils connectables" : "Connectable tools"}>
-      {connectors.map(item => (
-        <li key={item.id} className="rg-connectors__item">
-          <span className="rg-connectors__mark" aria-hidden="true">
-            <img
-              className="rg-connectors__logo"
-              src={`/assets/ged/connectors/${item.id}.${item.ext}`}
-              alt=""
-              width={22}
-              height={22}
-              loading="lazy"
-            />
-          </span>
-          <span className="rg-connectors__meta">
-            <b>{item.name}</b>
-            <small>{lang === "fr" ? item.groupFr : item.groupEn}</small>
-          </span>
-        </li>
-      ))}
-    </ul>
-    <p className="rg-connectors__note">
-      {lang === "fr"
-        ? "Les connexions se déploient progressivement, selon vos priorités et le cadre de sécurité défini avec vous."
-        : "Connections roll out progressively, according to your priorities and the security framework agreed with you."}
-    </p>
-  </section>;
-}
-
-function UseCases({ lang }: { lang: Lang }) {
-  const [selected, setSelected] = useState(0);
-  const cases = lang === "fr" ? casesFr : casesEn;
-  const item = cases[selected];
-  return <section className="rg-section rg-cases" id="usages">
-    <div className="rg-section-head">
-      <span className="rg-eyebrow">{lang === "fr" ? "02 / DANS VOTRE QUOTIDIEN" : "02 / IN YOUR DAILY WORK"}</span>
-      <h2>{lang === "fr" ? <>Les bons documents.<br /><span>Dans la vraie vie.</span></> : <>The right documents.<br /><span>In the real world.</span></>}</h2>
-      <img
-        className="rg-section-head__visual"
-        src="/assets/ged/usages-visual.png"
-        alt={lang === "fr" ? "Chercher, vérifier et valider un document" : "Search, verify and validate a document"}
-        loading="lazy"
-      />
-    </div>
-    <div className="rg-case-tabs" aria-label={lang === "fr" ? "Choisir un secteur" : "Choose a sector"}>{cases.map((entry, index) => <button type="button" aria-pressed={index === selected} key={entry.name} onClick={() => setSelected(index)}>{entry.name}<Arrow diagonal /></button>)}</div>
-    <div className="rg-case-content" key={selected}>
-      <div className="rg-case-copy"><span className="rg-eyebrow">{item.role}</span><h3>{item.title}</h3><p>{item.description}</p><div className="rg-tags">{item.files.map(file => <span key={file}>{file}</span>)}</div><a className="rg-text-link" href="#pilote">{lang === "fr" ? "Parlons de votre cas" : "Tell us about your case"} <Arrow /></a></div>
-      <div className="rg-chat"><div className="rg-chat__head"><span className="rg-chat__avatar">r.</span><div><b>Remparia</b><small>{lang === "fr" ? "EXEMPLE DE RECHERCHE SOURCÉE" : "EXAMPLE OF SOURCED SEARCH"}</small></div><span aria-hidden="true">✳</span></div><div className="rg-chat__question">{item.question}</div><div className="rg-chat__answer"><span className="rg-chat__avatar">r.</span><div><p>{item.answer}</p><div className="rg-source"><span aria-hidden="true">↳</span><div><small>{lang === "fr" ? "SOURCE UTILISÉE" : "SOURCE USED"}</small><span>{item.source}</span></div></div></div></div><div className="rg-chat__next"><small>{lang === "fr" ? "PROCHAINE ÉTAPE POSSIBLE" : "POSSIBLE NEXT STEP"}</small><span>{item.next}<Arrow /></span></div><p className="rg-chat__disclaimer">{lang === "fr" ? "Scénario illustratif · documents fictifs · action soumise à validation" : "Illustrative scenario · fictional documents · action subject to approval"}</p></div>
-    </div>
-  </section>;
-}
-
-const proofStats = [
-  {
-    value: "53 %",
-    fr: "des dirigeants de TPE-PME craignent la perte ou le piratage de leurs données.",
-    en: "of small-business leaders fear losing their data or seeing it hacked.",
+const copy = {
+  fr: {
+    skip: "Aller au contenu",
+    nav: {
+      conservation: "Conservation",
+      completude: "Complétude",
+      classement: "Classement",
+      agent: "Agent IA",
+      faq: "Questions",
+      cta: "Rejoindre le cercle fondateur",
+      open: "Ouvrir le menu",
+      close: "Fermer le menu",
+      closeShort: "Fermer −",
+      main: "Navigation principale",
+    },
+    hero: {
+      aria: "Présentation Remparia GED",
+      eyebrow: "GED pour TPE et PME · Hébergée en France",
+      titleBefore: "Retrouvez n’importe quel document",
+      titleAccent: "en moins de 15 secondes.",
+      body: "Remparia GED classe chaque document dès son dépôt, vérifie qu’il ne vous en manque aucun et le conserve le temps exigé par la loi. Et un agent IA répond à vos questions, sources à l’appui.",
+      cta: "Tester sur mes documents",
+      secondary: "Voir ce que ça change",
+      note: "Plan de classement conforme aux règles françaises · Réponses sourcées · Vous gardez la main",
+      bottomLeft: "UNE NOUVELLE FAÇON DE TRAVAILLER AVEC VOS DOCUMENTS",
+      bottomRight: "DÉCOUVRIR",
+    },
+    pillars: [
+      { num: "01 / CONSERVER", text: "Gardé le temps exigé par la loi" },
+      { num: "02 / COMPLÉTER", text: "Aucune pièce ne manque" },
+      { num: "03 / CLASSER", text: "Classé et indexé tout seul" },
+      { num: "04 / DEMANDER", text: "Un agent IA qui connaît vos documents" },
+      { num: "05 / RETROUVER", text: "En 15 secondes" },
+    ],
+    demo: {
+      question: "Où est l’attestation décennale de 2026 ?",
+      file: "Attestation décennale 2026 — Assureur Alpha",
+      folder: "06 Assurances › 06.8 Décennale et garanties de construction",
+      meta: "Valable jusqu’au 31/12/2026 · Conservation : 10 ans · Renouvellement suivi",
+      answer: "Voici l’attestation 2026. Elle couvre les travaux de gros œuvre et expire le 31 décembre : je vous rappellerai de demander la suivante mi-novembre.",
+      source: "SOURCE : ATTESTATION DÉCENNALE 2026, P. 1",
+      example: "Exemple illustratif",
+    },
+    conservation: {
+      eyebrow: "01 / CONSERVATION",
+      title: <>Gardé le temps qu’il faut.<br /><span>Pas un jour de moins.</span></>,
+      body: "Facture, bulletin de paie, contrat, attestation : chaque type de document porte sa durée de conservation. Remparia calcule la date de fin, vous prévient avant, et vous propose de détruire ce qui peut l’être. Rien n’est jeté par erreur, rien n’est gardé pour rien.",
+      checks: [
+        "Durée légale et durée recommandée pour chaque type de document",
+        "Sort final clair : conserver, détruire ou trier",
+        "Documents hébergés en France, sur notre propre infrastructure",
+      ],
+      stat: "53 %",
+      statText: "des dirigeants de TPE-PME craignent la perte ou le piratage de leurs données.",
+      statSource: "BAROMÈTRE FRANCE NUM 2026",
+      register: "Registre de conservation",
+      example: "EXEMPLE ILLUSTRATIF",
+      cols: ["DOCUMENT", "DURÉE", "FIN"],
+      rows: [
+        { doc: "Facture fournisseur", duration: "10 ans", end: "31/12/2036" },
+        { doc: "Bulletin de paie (double)", duration: "5 ans", end: "30/09/2031" },
+        { doc: "Contrat commercial", duration: "5 ans après la fin", end: "Selon la fin du contrat" },
+        { doc: "Devis non signé 2019", duration: "Expirée", end: "À détruire, à valider", expired: true },
+      ],
+      footnote: "3 documents arrivent en fin de conservation ce trimestre.",
+    },
+    completude: {
+      eyebrow: "02 / COMPLÉTUDE",
+      title: <>Sachez ce qui manque.<br /><span>Avant qu’on vous le demande.</span></>,
+      body: "Kbis, attestation URSSAF, décennale, document unique, contrats de travail : Remparia connaît les documents qu’une entreprise française doit détenir. Il compare avec ce que vous avez déposé et vous signale les manques et les pièces expirées.",
+      after: "Un contrôle, un appel d’offres, une cession ou une levée de fonds ? Votre dossier est déjà prêt.",
+      dossier: "Dossier de l’entreprise",
+      score: "12 / 14 PIÈCES",
+      items: [
+        { name: "Extrait Kbis de moins de 3 mois", status: "Présent", tone: "ok" },
+        { name: "Attestation décennale 2026", status: "Présent", tone: "ok" },
+        { name: "Attestation de vigilance URSSAF", status: "Expirée le 30/09", tone: "warn" },
+        { name: "Document unique d’évaluation des risques", status: "Manquant", tone: "bad" },
+        { name: "Contrat d’assurance RC Pro", status: "Présent", tone: "ok" },
+      ],
+    },
+    classement: {
+      eyebrow: "03 / CLASSEMENT ET INDEXATION",
+      title: <>Vous déposez.<br /><span>Le classement se fait seul.</span></>,
+      body: "Glissez un fichier, un scan ou un mail. Remparia reconnaît le type de document, le range dans le bon dossier, lui donne un nom clair et en extrait les informations utiles : émetteur, montant, dates, échéance.",
+      hint: "Quand il hésite, il vous demande au lieu de deviner.",
+      drop: "scan_0412.pdf déposé",
+      label: "CLASSEMENT PROPOSÉ",
+      confidence: "CONFIANCE ÉLEVÉE",
+      path: "04 Comptabilité › 04.2 Factures fournisseurs",
+      file: "2026-10-03_Facture_Fournisseur-Alpha_F-2026-118.pdf",
+      fields: [
+        ["Émetteur", "Fournisseur Alpha"],
+        ["Montant TTC", "1 240,00 €"],
+        ["Date", "03/10/2026"],
+        ["Échéance", "02/11/2026"],
+      ],
+      validate: "Valider",
+      reclass: "Reclasser",
+      rule: "Règle appliquée : facture reçue d’un fournisseur",
+      example: "EXEMPLE ILLUSTRATIF",
+      stats: [
+        ["78", "dossiers prêts à l’emploi, chacun avec son mode d’emploi"],
+        ["298", "types de documents reconnus"],
+        ["8", "registres tenus à jour : contrats, assurances, matériel…"],
+      ],
+    },
+    agent: {
+      eyebrow: "04 / AGENT IA",
+      title: <>Un agent qui connaît<br /><span>tous vos documents.</span></>,
+      body: "Posez vos questions en français, comme à un collaborateur. L’agent cherche dans toute votre base documentaire, répond, et cite chaque document utilisé pour que vous puissiez vérifier.",
+      checks: [
+        "Chaque réponse renvoie à ses sources",
+        "Il ne voit que ce que les droits de chaque utilisateur permettent",
+        "Il ne fait rien d’engageant sans votre accord",
+      ],
+      chatLabel: "EXEMPLE DE RECHERCHE SOURCÉE",
+      q1: "Quels contrats se renouvellent avant la fin de l’année ?",
+      a1: "Trois contrats se renouvellent tacitement d’ici le 31 décembre :\n• Maintenance des véhicules — préavis avant le 15/11\n• Location du dépôt — préavis avant le 30/11\n• Téléphonie mobile — préavis avant le 01/12",
+      s1: "SOURCES : 3 CONTRATS · DOSSIER 02 CONTRATS",
+      q2: "Prépare le Kbis et l’attestation URSSAF pour l’appel d’offres.",
+      a2: "Le Kbis est prêt. L’attestation URSSAF a expiré le 30/09 : voulez-vous que je prépare la demande de renouvellement ?",
+    },
+    quinze: {
+      eyebrow: "05 / RETROUVER",
+      value: "15",
+      unit: "s",
+      title: <>Le temps de retrouver un document.<br /><span>Pas une matinée.</span></>,
+      body: "Une recherche ou une question suffit, au bureau comme sur le téléphone. Vous obtenez le bon document, dans sa dernière version, avec le dossier où il est rangé.",
+      before: "AUJOURD’HUI",
+      beforeItems: [
+        "Fouiller l’armoire, le serveur, les mails et le Drive",
+        "Appeler le comptable ou l’assistante",
+        "Douter de la bonne version",
+      ],
+      after: "AVEC REMPARIA GED",
+      afterItems: [
+        "Une recherche ou une question en français",
+        "Le bon document, dans sa dernière version",
+        "Sa source et son dossier, pour vérifier",
+      ],
+    },
+    proof: {
+      eyebrow: "06 / LE TERRAIN LE CONFIRME",
+      title: <>Vous n’êtes pas seuls.<br /><span>Le moment est maintenant.</span></>,
+      body: "Sécurité des données, IA documentaire, facturation électronique : les priorités des TPE-PME rejoignent exactement ce que Remparia GED prépare avec vous.",
+      source: "Source : Baromètre France Num 2026.",
+      stats: [
+        { value: "53 %", text: "des dirigeants de TPE-PME craignent la perte ou le piratage de leurs données." },
+        { value: "13 %", text: "des TPE-PME utilisent l’IA pour analyser ou classer des documents." },
+        { value: "39 %", text: "des TPE-PME placent la réforme de la facturation électronique parmi leurs priorités numériques pour 2026–2027." },
+      ],
+    },
+    trust: {
+      eyebrow: "07 / CONFIANCE",
+      visual: "VOTRE ENTREPRISE. VOS DROITS. VOS CHOIX.",
+      title: <>Une IA utile.<br /><span>Un cadre clair.</span></>,
+      items: [
+        { n: "01", h: "Hébergé en France", p: "Sur notre propre infrastructure, sans dépendre d’un cloud étranger." },
+        { n: "02", h: "Des réponses sourcées", p: "Chaque réponse cite le document d’origine. Rien n’est inventé." },
+        { n: "03", h: "Des droits par personne", p: "Chacun ne voit que ce qui le concerne, par société et par dossier." },
+        { n: "04", h: "Vous décidez", p: "Les classements incertains et les actions engageantes attendent votre validation." },
+      ],
+      faqLink: "Vos questions sur le projet",
+      alt: "Une responsable vérifie un document avant de le valider",
+    },
+    cercle: {
+      eyebrow: "Cercle fondateur · places limitées",
+      title: <>Testez-le sur<br /><span>vos propres documents.</span></>,
+      body: "Nous ouvrons Remparia GED à un petit groupe de dirigeants de PME. Vous la testez sur vos vrais documents, vous nous aidez à la façonner, et vous gardez un tarif fondateur.",
+      open: "CANDIDATURES OUVERTES",
+      get: "Ce que vous obtenez",
+      perks: [
+        "3 mois de pilote offerts, avec mise en route accompagnée sur 50 à 100 de vos documents",
+        "Tarif fondateur bloqué pendant 12 mois",
+        "Un accès direct à l’équipe pour orienter le produit",
+      ],
+      cta: "Candidater en 2 minutes",
+      note: "Un échange de 30 minutes, sans engagement.",
+    },
+    faq: {
+      eyebrow: "08 / FAQ",
+      title: <>Les questions<br /><span>qui comptent.</span></>,
+      more: "Une autre question ?",
+      items: [
+        ["Faut-il tout migrer d’un coup ?", "Non. Vous commencez par les nouveaux documents et vous reprenez l’historique à votre rythme. Nous pouvons vous y aider."],
+        ["L’IA voit-elle tous mes documents ?", "Elle ne voit que ce que les droits de l’utilisateur permettent, et chaque réponse cite ses sources."],
+        ["Où sont hébergés mes documents ?", "En France, sur notre propre infrastructure."],
+        ["Est-ce que ça remplace ma plateforme de facture électronique ?", "Non. Votre plateforme agréée envoie et reçoit les factures. Remparia les range et les conserve avec tous vos autres documents de gestion."],
+        ["Combien ça coûte ?", "Un abonnement par utilisateur et par mois, avec l’espace de stockage et des crédits IA inclus. Les membres du cercle fondateur bénéficient d’un tarif préférentiel."],
+      ] as [string, string][],
+    },
+    closing: {
+      title: <>Commencez par vos documents.<br /><span>Imaginez la suite.</span></>,
+      cta: "Rejoindre le cercle fondateur",
+    },
+    footer: {
+      tagline: <>Commencez par vos documents.<br />Imaginez la suite.</>,
+      cta: "Rejoindre le cercle fondateur",
+      site: "Le site Remparia",
+      slogan: "Intelligence humaine. Échelle artificielle.",
+    },
+    title: "Remparia GED — Retrouvez n’importe quel document en moins de 15 secondes.",
   },
-  {
-    value: "13 %",
-    fr: "des TPE-PME utilisent l’IA pour analyser ou classer des documents.",
-    en: "of small businesses use AI to analyze or classify documents.",
+  en: {
+    skip: "Skip to content",
+    nav: {
+      conservation: "Retention",
+      completude: "Completeness",
+      classement: "Filing",
+      agent: "AI agent",
+      faq: "Questions",
+      cta: "Join the founding circle",
+      open: "Open menu",
+      close: "Close menu",
+      closeShort: "Close −",
+      main: "Main navigation",
+    },
+    hero: {
+      aria: "Remparia DMS introduction",
+      eyebrow: "DMS for SMEs · Hosted in France",
+      titleBefore: "Find any document",
+      titleAccent: "in under 15 seconds.",
+      body: "Remparia DMS files every document as soon as it arrives, checks that nothing is missing, and keeps it for as long as the law requires. An AI agent answers your questions, with sources.",
+      cta: "Try it on my documents",
+      secondary: "See what changes",
+      note: "French-compliant filing plan · Sourced answers · You stay in control",
+      bottomLeft: "A NEW WAY TO WORK WITH YOUR DOCUMENTS",
+      bottomRight: "DISCOVER",
+    },
+    pillars: [
+      { num: "01 / RETAIN", text: "Kept for as long as the law requires" },
+      { num: "02 / COMPLETE", text: "No missing documents" },
+      { num: "03 / FILE", text: "Filed and indexed automatically" },
+      { num: "04 / ASK", text: "An AI agent that knows your documents" },
+      { num: "05 / FIND", text: "In 15 seconds" },
+    ],
+    demo: {
+      question: "Where is the 2026 ten-year insurance certificate?",
+      file: "Ten-year insurance 2026 — Insurer Alpha",
+      folder: "06 Insurance › 06.8 Construction guarantees",
+      meta: "Valid until 31/12/2026 · Retention: 10 years · Renewal tracked",
+      answer: "Here is the 2026 certificate. It covers structural works and expires on 31 December: I’ll remind you mid-November to request the next one.",
+      source: "SOURCE: TEN-YEAR CERTIFICATE 2026, P. 1",
+      example: "Illustrative example",
+    },
+    conservation: {
+      eyebrow: "01 / RETENTION",
+      title: <>Kept for as long as needed.<br /><span>Not a day less.</span></>,
+      body: "Invoice, payslip, contract, certificate: every document type has its retention period. Remparia calculates the end date, warns you beforehand, and suggests destroying what can go. Nothing is discarded by mistake, nothing is kept for nothing.",
+      checks: [
+        "Legal and recommended retention for every document type",
+        "Clear final disposition: keep, destroy or sort",
+        "Documents hosted in France, on our own infrastructure",
+      ],
+      stat: "53 %",
+      statText: "of small-business leaders fear losing their data or seeing it hacked.",
+      statSource: "FRANCE NUM 2026 BAROMETER",
+      register: "Retention register",
+      example: "ILLUSTRATIVE EXAMPLE",
+      cols: ["DOCUMENT", "PERIOD", "END"],
+      rows: [
+        { doc: "Supplier invoice", duration: "10 years", end: "31/12/2036" },
+        { doc: "Payslip (copy)", duration: "5 years", end: "30/09/2031" },
+        { doc: "Commercial contract", duration: "5 years after end", end: "Depends on contract end" },
+        { doc: "Unsigned quote 2019", duration: "Expired", end: "To destroy, pending approval", expired: true },
+      ],
+      footnote: "3 documents reach end of retention this quarter.",
+    },
+    completude: {
+      eyebrow: "02 / COMPLETENESS",
+      title: <>Know what’s missing.<br /><span>Before anyone asks.</span></>,
+      body: "Company extract, social-security certificate, ten-year insurance, risk assessment, employment contracts: Remparia knows what a French company must hold. It compares that with what you’ve uploaded and flags gaps and expired files.",
+      after: "An audit, a tender, a sale or a fundraising round? Your file is already ready.",
+      dossier: "Company file",
+      score: "12 / 14 DOCUMENTS",
+      items: [
+        { name: "Company extract less than 3 months old", status: "Present", tone: "ok" },
+        { name: "Ten-year insurance 2026", status: "Present", tone: "ok" },
+        { name: "URSSAF vigilance certificate", status: "Expired on 30/09", tone: "warn" },
+        { name: "Workplace risk assessment document", status: "Missing", tone: "bad" },
+        { name: "Professional liability insurance contract", status: "Present", tone: "ok" },
+      ],
+    },
+    classement: {
+      eyebrow: "03 / FILING AND INDEXING",
+      title: <>You upload.<br /><span>Filing happens on its own.</span></>,
+      body: "Drop a file, a scan or an email. Remparia recognizes the document type, puts it in the right folder, gives it a clear name and extracts useful fields: issuer, amount, dates, deadline.",
+      hint: "When it’s unsure, it asks you instead of guessing.",
+      drop: "scan_0412.pdf uploaded",
+      label: "SUGGESTED FILING",
+      confidence: "HIGH CONFIDENCE",
+      path: "04 Accounting › 04.2 Supplier invoices",
+      file: "2026-10-03_Invoice_Supplier-Alpha_F-2026-118.pdf",
+      fields: [
+        ["Issuer", "Supplier Alpha"],
+        ["Amount incl. tax", "€1,240.00"],
+        ["Date", "03/10/2026"],
+        ["Due date", "02/11/2026"],
+      ],
+      validate: "Confirm",
+      reclass: "Reclassify",
+      rule: "Rule applied: invoice received from a supplier",
+      example: "ILLUSTRATIVE EXAMPLE",
+      stats: [
+        ["78", "ready-to-use folders, each with its own playbook"],
+        ["298", "recognized document types"],
+        ["8", "registers kept up to date: contracts, insurance, assets…"],
+      ],
+    },
+    agent: {
+      eyebrow: "04 / AI AGENT",
+      title: <>An agent that knows<br /><span>all your documents.</span></>,
+      body: "Ask questions in plain language, as you would a colleague. The agent searches your whole document base, answers, and cites every document used so you can verify.",
+      checks: [
+        "Every answer links back to its sources",
+        "It only sees what each user’s permissions allow",
+        "It never takes binding action without your approval",
+      ],
+      chatLabel: "SOURCED SEARCH EXAMPLE",
+      q1: "Which contracts renew before year-end?",
+      a1: "Three contracts renew automatically by 31 December:\n• Vehicle maintenance — notice before 15/11\n• Warehouse lease — notice before 30/11\n• Mobile telephony — notice before 01/12",
+      s1: "SOURCES: 3 CONTRACTS · FOLDER 02 CONTRACTS",
+      q2: "Prepare the company extract and URSSAF certificate for the tender.",
+      a2: "The company extract is ready. The URSSAF certificate expired on 30/09: shall I prepare the renewal request?",
+    },
+    quinze: {
+      eyebrow: "05 / FIND",
+      value: "15",
+      unit: "s",
+      title: <>The time to find a document.<br /><span>Not a morning.</span></>,
+      body: "A search or a question is enough, at the desk or on the phone. You get the right document, in its latest version, with the folder where it lives.",
+      before: "TODAY",
+      beforeItems: [
+        "Search cabinets, the server, emails and Drive",
+        "Call accounting or the assistant",
+        "Wonder if you have the right version",
+      ],
+      after: "WITH REMPARIA DMS",
+      afterItems: [
+        "A search or a question in plain language",
+        "The right document, in its latest version",
+        "Its source and folder, so you can verify",
+      ],
+    },
+    trust: {
+      eyebrow: "07 / TRUST",
+      visual: "YOUR BUSINESS. YOUR RIGHTS. YOUR CHOICES.",
+      title: <>Useful AI.<br /><span>A clear framework.</span></>,
+      items: [
+        { n: "01", h: "Hosted in France", p: "On our own infrastructure, without depending on a foreign cloud." },
+        { n: "02", h: "Sourced answers", p: "Every answer cites the original document. Nothing is invented." },
+        { n: "03", h: "Permissions per person", p: "Everyone only sees what concerns them, by company and by folder." },
+        { n: "04", h: "You decide", p: "Uncertain filings and binding actions wait for your approval." },
+      ],
+      faqLink: "Your questions about the project",
+      alt: "A manager reviews a document before approval",
+    },
+    proof: {
+      eyebrow: "06 / THE FIELD CONFIRMS IT",
+      title: <>You’re not alone.<br /><span>The moment is now.</span></>,
+      body: "Data security, document AI, e-invoicing: small-business priorities match exactly what Remparia DMS is building with you.",
+      source: "Source: France Num 2026 Barometer.",
+      stats: [
+        { value: "53 %", text: "of small-business leaders fear losing their data or seeing it hacked." },
+        { value: "13 %", text: "of small businesses use AI to analyze or classify documents." },
+        { value: "39 %", text: "of small businesses rank e-invoicing reform among their digital priorities for 2026–2027." },
+      ],
+    },
+    cercle: {
+      eyebrow: "Founding circle · limited places",
+      title: <>Try it on<br /><span>your own documents.</span></>,
+      body: "We are opening Remparia DMS to a small group of SME leaders. You try it on your real documents, help us shape it, and keep founder pricing.",
+      open: "APPLICATIONS OPEN",
+      get: "What you get",
+      perks: [
+        "3 months of pilot free, with guided setup on 50 to 100 of your documents",
+        "Founder pricing locked for 12 months",
+        "Direct access to the team to steer the product",
+      ],
+      cta: "Apply in 2 minutes",
+      note: "A 30-minute conversation, with no commitment.",
+    },
+    faq: {
+      eyebrow: "08 / FAQ",
+      title: <>The questions<br /><span>that matter.</span></>,
+      more: "Another question?",
+      items: [
+        ["Do I have to migrate everything at once?", "No. You start with new documents and catch up on history at your own pace. We can help."],
+        ["Does the AI see all my documents?", "It only sees what the user’s permissions allow, and every answer cites its sources."],
+        ["Where are my documents hosted?", "In France, on our own infrastructure."],
+        ["Does this replace my e-invoicing platform?", "No. Your accredited platform sends and receives invoices. Remparia files and retains them with all your other management documents."],
+        ["How much does it cost?", "A per-user monthly subscription, with storage and AI credits included. Founding-circle members get preferential pricing."],
+      ] as [string, string][],
+    },
+    closing: {
+      title: <>Start with your documents.<br /><span>Imagine what comes next.</span></>,
+      cta: "Join the founding circle",
+    },
+    footer: {
+      tagline: <>Start with your documents.<br />Imagine what comes next.</>,
+      cta: "Join the founding circle",
+      site: "Remparia website",
+      slogan: "Human intelligence. Artificial scale.",
+    },
+    title: "Remparia DMS — Find any document in under 15 seconds.",
   },
-  {
-    value: "39 %",
-    fr: "des TPE-PME placent la réforme de la facturation électronique parmi leurs priorités numériques pour 2026–2027.",
-    en: "of small businesses rank e-invoicing reform among their digital priorities for 2026–2027.",
-  },
-] as const;
-
-function ProofStats({ lang }: { lang: Lang }) {
-  return (
-    <section className="rg-section rg-proof" id="chiffres" aria-labelledby="proof-title">
-      <div className="rg-section-head">
-        <span className="rg-eyebrow">{lang === "fr" ? "LE TERRAIN LE CONFIRME" : "THE FIELD CONFIRMS IT"}</span>
-        <h2 id="proof-title">
-          {lang === "fr" ? <>Vous n’êtes pas seuls.<br /><span>Le moment est maintenant.</span></> : <>You’re not alone.<br /><span>The moment is now.</span></>}
-        </h2>
-        <p>
-          {lang === "fr"
-            ? "Sécurité des données, IA documentaire, facturation électronique : les priorités des TPE-PME rejoignent exactement ce que Remparia GED prépare avec vous."
-            : "Data security, document AI, e-invoicing: small-business priorities match exactly what Remparia DMS is building with you."}
-        </p>
-      </div>
-      <ul className="rg-proof__grid">
-        {proofStats.map(stat => (
-          <li key={stat.value} className="rg-proof__item">
-            <strong className="rg-proof__value">{stat.value}</strong>
-            <p>{lang === "fr" ? stat.fr : stat.en}</p>
-          </li>
-        ))}
-      </ul>
-      <p className="rg-proof__source">
-        {lang === "fr" ? "Source : Baromètre France Num 2026." : "Source: France Num 2026 Barometer."}
-      </p>
-    </section>
-  );
-}
+} as const;
 
 export function GedLandingPage() {
   const [lang, setLang] = useState<Lang>("fr");
@@ -211,19 +430,25 @@ export function GedLandingPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [applicationOpen, setApplicationOpen] = useState(false);
   const faqVideoRef = useRef<HTMLVideoElement>(null);
-  const faqs = lang === "fr" ? faqsFr : faqsEn;
+  const t = copy[lang];
+
   useEffect(() => {
     const stored = window.localStorage.getItem("remparia-lang");
     if (stored === "en" || stored === "fr") setLang(stored);
   }, []);
+
   useEffect(() => {
     const originalTitle = document.title;
-    document.title = lang === "fr" ? "Remparia GED — Vos documents, enfin utiles." : "Remparia DMS — Documents that work for you.";
+    document.title = t.title;
     document.documentElement.lang = lang;
     window.localStorage.setItem("remparia-lang", lang);
     document.body.classList.add("rg-landing-body");
-    return () => { document.title = originalTitle; document.body.classList.remove("rg-landing-body"); };
-  }, [lang]);
+    return () => {
+      document.title = originalTitle;
+      document.body.classList.remove("rg-landing-body");
+    };
+  }, [lang, t.title]);
+
   useEffect(() => {
     const video = faqVideoRef.current;
     if (!video) return;
@@ -233,56 +458,383 @@ export function GedLandingPage() {
     void video.play().catch(() => undefined);
   }, []);
 
-  return <div className="remparia-landing">
-    <a className="rg-skip" href="#contenu">{lang === "fr" ? "Aller au contenu" : "Skip to content"}</a>
-    <header className="rg-header"><div className="rg-header__inner">
-      <a className="rg-brand" href="https://www.remparia.com/fr" aria-label="Remparia, site principal"><img src="/assets/ged/remparia-logo.png" alt="Remparia" /></a><span className="rg-header__product">GED</span>
-      <button className="rg-menu-toggle" type="button" aria-label={menuOpen ? (lang === "fr" ? "Fermer le menu" : "Close menu") : (lang === "fr" ? "Ouvrir le menu" : "Open menu")} aria-expanded={menuOpen} aria-controls="landing-navigation" onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? (lang === "fr" ? "Fermer −" : "Close −") : "Menu +"}</button>
-      <nav id="landing-navigation" className={menuOpen ? "is-open" : ""} aria-label={lang === "fr" ? "Navigation principale" : "Main navigation"}><a href="#fonctionnement" onClick={() => setMenuOpen(false)}>{lang === "fr" ? "L’expérience" : "Experience"}</a><a href="#usages" onClick={() => setMenuOpen(false)}>{lang === "fr" ? "Les usages" : "Use cases"}</a><a href="#connexions" onClick={() => setMenuOpen(false)}>{lang === "fr" ? "Les connexions" : "Connections"}</a><a href="#confiance" onClick={() => setMenuOpen(false)}>{lang === "fr" ? "La confiance" : "Trust"}</a><a className="rg-nav-cta" href="#pilote" onClick={() => setMenuOpen(false)}>{lang === "fr" ? "Rejoindre le cercle fondateur" : "Join the founding circle"} <Arrow diagonal /></a><button className="rg-language-toggle" type="button" onClick={() => setLang(lang === "fr" ? "en" : "fr")} aria-label={lang === "fr" ? "Switch to English" : "Passer en français"}>{lang === "fr" ? "EN" : "FR"}</button></nav>
-    </div></header>
-    <main id="contenu">
-      <section className="rg-hero" aria-label={lang === "fr" ? "Présentation Remparia GED" : "Remparia DMS introduction"}>
-        <div className="rg-hero__bg" aria-hidden="true">
-          <img src="/assets/ged/ged-hero-human-v2.png?v=4" alt="" fetchPriority="high" />
+  const closeMenu = () => setMenuOpen(false);
+
+  return (
+    <div className="remparia-landing">
+      <a className="rg-skip" href="#contenu">{t.skip}</a>
+      <header className="rg-header">
+        <div className="rg-header__inner">
+          <a className="rg-brand" href="https://www.remparia.com/fr" aria-label="Remparia, site principal">
+            <img src="/assets/ged/remparia-logo.png" alt="Remparia" />
+          </a>
+          <span className="rg-header__product">GED</span>
+          <button
+            className="rg-menu-toggle"
+            type="button"
+            aria-label={menuOpen ? t.nav.close : t.nav.open}
+            aria-expanded={menuOpen}
+            aria-controls="landing-navigation"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            {menuOpen ? t.nav.closeShort : "Menu +"}
+          </button>
+          <nav id="landing-navigation" className={menuOpen ? "is-open" : ""} aria-label={t.nav.main}>
+            <a href="#conservation" onClick={closeMenu}>{t.nav.conservation}</a>
+            <a href="#completude" onClick={closeMenu}>{t.nav.completude}</a>
+            <a href="#classement" onClick={closeMenu}>{t.nav.classement}</a>
+            <a href="#agent" onClick={closeMenu}>{t.nav.agent}</a>
+            <a href="#faq" onClick={closeMenu}>{t.nav.faq}</a>
+            <a className="rg-nav-cta" href="#cercle" onClick={closeMenu}>{t.nav.cta} <Arrow diagonal /></a>
+            <button
+              className="rg-language-toggle"
+              type="button"
+              onClick={() => setLang(lang === "fr" ? "en" : "fr")}
+              aria-label={lang === "fr" ? "Switch to English" : "Passer en français"}
+            >
+              {lang === "fr" ? "EN" : "FR"}
+            </button>
+          </nav>
         </div>
-        <div className="rg-hero__inner rg-container">
-          <div className="rg-hero__copy">
-            <span className="rg-eyebrow rg-hero__eyebrow"><i />{lang === "fr" ? "REMPARIA GED · CERCLE FONDATEUR" : "REMPARIA DMS · FOUNDING CIRCLE"}</span>
-            <h1>{lang === "fr" ? <>Vos documents,<br /><span>enfin utiles.</span></> : <>Your documents,<br /><span>finally useful.</span></>}</h1>
-            <p>{lang === "fr" ? <>Rassemblez-les. Retrouvez ce qui compte.<br />Et faites avancer votre entreprise,<br className="rg-desktop-break" /> pas votre classement.</> : <>Bring them together. Find what matters.<br />Move your business forward—<br className="rg-desktop-break" /> not your filing system.</>}</p>
-            <div className="rg-hero__actions">
-              <a className="rg-button rg-button--dark" href="#pilote">{lang === "fr" ? "Rejoindre la liste prioritaire" : "Join the priority list"} <Arrow diagonal /></a>
-              <a className="rg-text-link" href="#experience">{lang === "fr" ? "Voir l’expérience" : "See the experience"} <span aria-hidden="true">↓</span></a>
-            </div>
-            <div className="rg-hero__note">
-              <span className="rg-small-asterisk" aria-hidden="true">✳</span>
-              <span>{lang === "fr" ? <>Pour les dirigeants qui veulent participer<br />à la construction d’un nouvel outil.</> : <>For business leaders who want to help<br />shape a new kind of tool.</>}</span>
+      </header>
+
+      <main id="contenu">
+        <section className="rg-hero" aria-label={t.hero.aria}>
+          <div className="rg-hero__bg" aria-hidden="true">
+            <img src="/assets/ged/ged-hero-human-v2.png?v=4" alt="" fetchPriority="high" />
+          </div>
+          <div className="rg-hero__inner rg-container">
+            <div className="rg-hero__copy">
+              <span className="rg-eyebrow rg-hero__eyebrow"><i />{t.hero.eyebrow}</span>
+              <h1>
+                {t.hero.titleBefore}
+                <br />
+                <span>{t.hero.titleAccent}</span>
+              </h1>
+              <p>{t.hero.body}</p>
+              <div className="rg-hero__actions">
+                <button className="rg-button rg-button--dark" type="button" onClick={() => setApplicationOpen(true)}>
+                  {t.hero.cta} <Arrow diagonal />
+                </button>
+                <a className="rg-text-link" href="#experience">
+                  {t.hero.secondary} <span aria-hidden="true">↓</span>
+                </a>
+              </div>
+              <div className="rg-hero__note">
+                <span className="rg-small-asterisk" aria-hidden="true">✳</span>
+                <span>{t.hero.note}</span>
+              </div>
             </div>
           </div>
+        </section>
+
+        <div className="rg-hero-bottom rg-container">
+          <span>{t.hero.bottomLeft}</span>
+          <span>{t.hero.bottomRight} <span aria-hidden="true">↓</span></span>
         </div>
-      </section>
-      <div className="rg-hero-bottom rg-container"><span>{lang === "fr" ? "UNE NOUVELLE FAÇON DE TRAVAILLER AVEC VOS DOCUMENTS" : "A NEW WAY TO WORK WITH YOUR DOCUMENTS"}</span><span>{lang === "fr" ? "DÉCOUVRIR" : "DISCOVER"} <span aria-hidden="true">↓</span></span></div>
-      <ScrollFilm lang={lang} />
-      <section className="rg-section rg-intro" id="fonctionnement"><div className="rg-intro__statement"><span className="rg-eyebrow">{lang === "fr" ? "01 / BIEN PLUS QU’UN DOSSIER PARTAGÉ" : "01 / MORE THAN A SHARED FOLDER"}</span><h2>{lang === "fr" ? <>Le problème n’est pas<br />de stocker un PDF.<br /><span>C’est tout ce qui suit.</span></> : <>The challenge isn’t<br />storing a PDF.<br /><span>It’s everything after.</span></>}</h2></div><div className="rg-intro__copy"><p>{lang === "fr" ? "Retrouver la dernière version. Comprendre une clause. Repérer une date. Demander une pièce manquante." : "Find the latest version. Understand a clause. Spot a date. Request a missing document."}</p><p>{lang === "fr" ? "Remparia fait le lien entre vos documents et votre travail. Une GED simple pour commencer. Une base solide pour aller plus loin." : "Remparia connects your documents to your work. A simple DMS to begin with. A strong foundation to go further."}</p></div><ProductPreview lang={lang} /></section>
-      <UseCases lang={lang} />
-      <section className="rg-section rg-trust" id="confiance"><div className="rg-trust__visual"><img src="/assets/ged/ged-trust-human-v2.png" alt={lang === "fr" ? "Une responsable vérifie un document avant de le valider" : "A manager reviews a document before approval"} loading="lazy" /><span className="rg-eyebrow">{lang === "fr" ? "VOTRE ENTREPRISE. VOS DROITS. VOS CHOIX." : "YOUR BUSINESS. YOUR RIGHTS. YOUR CHOICES."}</span></div><div className="rg-trust__copy"><span className="rg-eyebrow">{lang === "fr" ? "03 / L’INTELLIGENCE, SANS L’ANGLE MORT" : "03 / INTELLIGENCE, WITHOUT BLIND SPOTS"}</span><h2>{lang === "fr" ? <>Une IA utile.<br /><span>Un cadre clair.</span></> : <>Useful AI.<br /><span>A clear framework.</span></>}</h2><p>{lang === "fr" ? "La confiance ne se résume pas à un cadenas. Elle doit se voir dans les accès, les sources et les décisions." : "Trust is more than a padlock. It must be visible in access controls, sources and decisions."}</p><div className="rg-trust-item"><Check /><div><h3>{lang === "fr" ? "Les droits, avant la réponse" : "Permissions before answers"}</h3><p>{lang === "fr" ? "La recherche reste dans le périmètre autorisé de chaque utilisateur." : "Search stays within each user’s authorized scope."}</p></div></div><div className="rg-trust-item"><Check /><div><h3>{lang === "fr" ? "La preuve, pas une boîte noire" : "Evidence, not a black box"}</h3><p>{lang === "fr" ? "Les réponses renvoient aux sources. Les opérations importantes laissent une trace." : "Answers link back to sources. Important operations leave an audit trail."}</p></div></div><div className="rg-trust-item"><Check /><div><h3>{lang === "fr" ? "Vous gardez le dernier mot" : "You have the final say"}</h3><p>{lang === "fr" ? "Les actions engageantes se valident. Les choix d’hébergement et de modèle se cadrent avec vous." : "Meaningful actions require approval. Hosting and model choices are agreed with you."}</p></div></div><a className="rg-text-link" href="#faq">{lang === "fr" ? "Vos questions sur le projet" : "Your questions about the project"} <Arrow /></a></div></section>
-      <Connectors lang={lang} />
-      <section className="rg-os" id="remparia-os"><div className="rg-section"><div className="rg-os__heading"><span className="rg-eyebrow">{lang === "fr" ? "05 / COMMENCER SIMPLE. VOIR PLUS LOIN." : "05 / START SIMPLE. THINK AHEAD."}</span><h2>{lang === "fr" ? <>Votre GED aujourd’hui.<br /><span>Votre OS demain.</span></> : <>Your DMS today.<br /><span>Your OS tomorrow.</span></>}</h2><p>{lang === "fr" ? "Pas besoin d’acheter une plateforme entière pour commencer. Vos documents sont la première étape d’un environnement qui pourra relier vos équipes, vos outils et vos actions." : "You do not need to buy an entire platform to get started. Your documents are the first step toward an environment connecting your teams, tools and actions."}</p></div><EcosystemMap lang={lang} /><div className="rg-os__roadmap"><div><small>{lang === "fr" ? "LE POINT DE DÉPART" : "THE STARTING POINT"}</small><h3>Remparia {lang === "fr" ? "GED" : "DMS"}</h3><p>{lang === "fr" ? <>Rassembler, classer,<br />retrouver les informations.</> : <>Gather, organize and<br />find information.</>}</p><span className="rg-phase">{lang === "fr" ? "PROGRAMME PILOTE" : "PILOT PROGRAM"}</span></div><span className="rg-roadmap-arrow" aria-hidden="true">→</span><div><small>{lang === "fr" ? "L’ÉTAPE SUIVANTE" : "THE NEXT STEP"}</small><h3>{lang === "fr" ? "Des dossiers vivants" : "Living files"}</h3><p>{lang === "fr" ? <>Relier les pièces, les échéances,<br />les responsables et les validations.</> : <>Connect documents, deadlines,<br />owners and approvals.</>}</p><span className="rg-phase rg-phase--future">{lang === "fr" ? "EXTENSION PROGRESSIVE" : "PROGRESSIVE EXTENSION"}</span></div><span className="rg-roadmap-arrow" aria-hidden="true">→</span><div><small>{lang === "fr" ? "À L’ÉCHELLE DE L’ENTREPRISE" : "ACROSS THE BUSINESS"}</small><h3>RempariaOS</h3><p>{lang === "fr" ? <>Connecter vos outils et orchestrer<br />des actions sous contrôle humain.</> : <>Connect your tools and orchestrate<br />human-controlled actions.</>}</p><span className="rg-phase rg-phase--future">{lang === "fr" ? "VISION PRODUIT" : "PRODUCT VISION"}</span></div></div></div></section>
-      <ProofStats lang={lang} />
-      <section className="rg-section rg-pilot" id="pilote"><div className="rg-pilot__copy"><span className="rg-eyebrow"><i />{lang === "fr" ? "CERCLE FONDATEUR · PRÉ-LANCEMENT" : "FOUNDING CIRCLE · PRE-LAUNCH"}</span><h2>{lang === "fr" ? <>Construisons-le<br />avec ceux qui<br /><span>s’en serviront.</span></> : <>Let’s build it<br />with the people<br /><span>who will use it.</span></>}</h2><p>{lang === "fr" ? "Nous réunissons des dirigeants de PME pour comprendre leurs vrais blocages documentaires et construire un produit qui répond au terrain. Chaque échange nourrit les priorités du modèle." : "We bring SME leaders together to understand their real document challenges and build a product grounded in day-to-day work. Every conversation shapes our priorities."}</p><div className="rg-pilot__perks"><span><Check /> {lang === "fr" ? "Partager votre réalité documentaire" : "Share your document reality"}</span><span><Check /> {lang === "fr" ? "Influencer les premiers choix du produit" : "Shape the product’s first decisions"}</span><span><Check /> {lang === "fr" ? "Accéder en priorité aux prochaines étapes" : "Get priority access to what comes next"}</span></div></div><div className="rg-pilot-card"><div className="rg-pilot-card__top"><span>{lang === "fr" ? "CANDIDATURES OUVERTES" : "APPLICATIONS OPEN"}</span><span>{lang === "fr" ? "PLACES LIMITÉES" : "LIMITED PLACES"}</span></div><span className="rg-pilot-card__asterisk" aria-hidden="true">✳</span><h3>{lang === "fr" ? <>Votre expérience.<br /><span>Notre point de départ.</span></> : <>Your experience.<br /><span>Our starting point.</span></>}</h3><div className="rg-founder-steps"><span><b>01</b> {lang === "fr" ? "Déposer sa candidature" : "Submit your application"}</span><span><b>02</b> {lang === "fr" ? "Étude par notre équipe" : "Review by our team"}</span><span><b>03</b> {lang === "fr" ? "Co-construire si nos enjeux se rejoignent" : "Co-design if our goals align"}</span></div><button className="rg-button rg-button--dark" type="button" onClick={() => setApplicationOpen(true)}>{lang === "fr" ? "Déposer ma candidature" : "Apply now"} <Arrow diagonal /></button><p>{lang === "fr" ? "Un premier échange exploratoire, sans engagement." : "An initial exploratory conversation, with no commitment."}</p><small>{lang === "fr" ? "Les informations partagées servent uniquement à qualifier les besoins et organiser les échanges de co-construction." : "Shared information is used only to understand needs and organize co-design discussions."}</small></div></section>
-      <section className="rg-section rg-faq" id="faq">
-        <div className="rg-section-head">
-          <span className="rg-eyebrow">{lang === "fr" ? "06 / AVANT DE SE LANCER" : "06 / BEFORE YOU BEGIN"}</span>
-          <h2>{lang === "fr" ? <>Les questions<br /><span>qui comptent.</span></> : <>The questions<br /><span>that matter.</span></>}</h2>
-          <p>{lang === "fr"
-            ? "Regardez d’abord le principe. Puis ouvrez les réponses précises sur le produit, le cercle fondateur et vos documents."
-            : "Watch the principle first. Then open the precise answers about the product, the founding circle and your documents."}</p>
-        </div>
-        <div className="rg-faq__body">
-          <figure className="rg-faq__media">
+
+        <ul className="rg-pillars rg-container" aria-label={lang === "fr" ? "Les cinq piliers" : "The five pillars"}>
+          {t.pillars.map(item => (
+            <li key={item.num}>
+              <small>{item.num}</small>
+              <span>{item.text}</span>
+            </li>
+          ))}
+        </ul>
+
+        <ScrollFilm lang={lang} />
+
+        <section className="rg-section rg-feature rg-conservation" id="conservation">
+          <div className="rg-feature__copy">
+            <span className="rg-eyebrow">{t.conservation.eyebrow}</span>
+            <h2>{t.conservation.title}</h2>
+            <p>{t.conservation.body}</p>
+            <div className="rg-feature__checks rg-feature__checks--outline">
+              {t.conservation.checks.map(item => (
+                <span key={item}><OutlineCheck /> {item}</span>
+              ))}
+            </div>
+            <aside className="rg-stat-inline">
+              <strong>{t.conservation.stat}</strong>
+              <p>
+                {t.conservation.statText}
+                <span className="rg-stat-inline__source">{t.conservation.statSource}</span>
+              </p>
+            </aside>
+          </div>
+          <div className="rg-panel rg-panel--register">
+            <div className="rg-panel__head">
+              <span className="rg-panel__title">{t.conservation.register}</span>
+              <span className="rg-panel__tag">{t.conservation.example}</span>
+            </div>
+            <table className="rg-table">
+              <thead>
+                <tr>{t.conservation.cols.map(col => <th key={col}>{col}</th>)}</tr>
+              </thead>
+              <tbody>
+                {t.conservation.rows.map(row => (
+                  <tr key={row.doc} className={row.expired ? "is-expired" : undefined}>
+                    <td>{row.doc}</td>
+                    <td className={row.expired ? "rg-table__warn" : undefined}>{row.duration}</td>
+                    <td>
+                      {row.expired ? <span className="rg-pill rg-pill--warn">{row.end}</span> : row.end}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div className="rg-panel__alert">
+              <i aria-hidden="true" />
+              <span>{t.conservation.footnote}</span>
+            </div>
+          </div>
+        </section>
+
+        <section className="rg-section rg-feature rg-feature--reverse" id="completude">
+          <div className="rg-feature__copy">
+            <span className="rg-eyebrow">{t.completude.eyebrow}</span>
+            <h2>{t.completude.title}</h2>
+            <p>{t.completude.body}</p>
+            <p>{t.completude.after}</p>
+          </div>
+          <div className="rg-panel">
+            <div className="rg-panel__head">
+              <span>{t.completude.dossier}</span>
+              <span>{t.completude.score}</span>
+            </div>
+            <ul className="rg-checklist">
+              {t.completude.items.map(item => (
+                <li key={item.name} data-tone={item.tone}>
+                  <span>{item.name}</span>
+                  <b>{item.status}</b>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        <section className="rg-section rg-classement" id="classement">
+          <div className="rg-classement__main">
+            <div className="rg-feature__copy">
+              <span className="rg-eyebrow">{t.classement.eyebrow}</span>
+              <h2>{t.classement.title}</h2>
+              <p>{t.classement.body}</p>
+              <p className="rg-classement__hint">{t.classement.hint}</p>
+            </div>
+            <div className="rg-panel rg-classify-card">
+              <div className="rg-classify-card__drop">
+                <span className="rg-classify-card__drop-icon" aria-hidden="true">↑</span>
+                <span>{t.classement.drop}</span>
+              </div>
+              <div className="rg-classify-card__body">
+                <div className="rg-classify-card__meta">
+                  <span className="rg-classify-card__label">{t.classement.label}</span>
+                  <span className="rg-classify-card__confidence">● {t.classement.confidence}</span>
+                </div>
+                <p className="rg-classify-card__path">{t.classement.path}</p>
+                <p className="rg-classify-card__file">{t.classement.file}</p>
+                <dl className="rg-classify-card__fields">
+                  {t.classement.fields.map(([k, v]) => (
+                    <div key={k}><dt>{k}</dt><dd>{v}</dd></div>
+                  ))}
+                </dl>
+                <div className="rg-classify-card__actions">
+                  <span className="rg-button rg-button--dark">{t.classement.validate}</span>
+                  <span className="rg-classify-card__ghost">{t.classement.reclass}</span>
+                </div>
+                <div className="rg-classify-card__foot">
+                  <span>{t.classement.rule}</span>
+                  <span className="rg-panel__tag">{t.classement.example}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="rg-mini-stats">
+            {t.classement.stats.map(([value, label]) => (
+              <div key={value}>
+                <strong>{value}</strong>
+                <span>{label}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="rg-section rg-feature rg-feature--reverse" id="agent">
+          <div className="rg-feature__copy">
+            <span className="rg-eyebrow">{t.agent.eyebrow}</span>
+            <h2>{t.agent.title}</h2>
+            <p>{t.agent.body}</p>
+            <div className="rg-feature__checks">
+              {t.agent.checks.map(item => (
+                <span key={item}><Check /> {item}</span>
+              ))}
+            </div>
+          </div>
+          <div className="rg-chat">
+            <div className="rg-chat__head">
+              <span className="rg-chat__avatar">r.</span>
+              <div>
+                <b>Remparia</b>
+                <small>{t.agent.chatLabel}</small>
+              </div>
+              <span aria-hidden="true">✳</span>
+            </div>
+            <div className="rg-chat__question">{t.agent.q1}</div>
+            <div className="rg-chat__answer">
+              <span className="rg-chat__avatar">r.</span>
+              <div>
+                <p style={{ whiteSpace: "pre-line" }}>{t.agent.a1}</p>
+                <div className="rg-source">
+                  <span aria-hidden="true">↳</span>
+                  <div><small>{t.agent.s1}</small></div>
+                </div>
+              </div>
+            </div>
+            <div className="rg-chat__question">{t.agent.q2}</div>
+            <div className="rg-chat__answer">
+              <span className="rg-chat__avatar">r.</span>
+              <div><p>{t.agent.a2}</p></div>
+            </div>
+          </div>
+        </section>
+
+        <section className="rg-section rg-quinze" id="quinze">
+          <div className="rg-quinze__head">
+            <div className="rg-quinze__metric">
+              <span className="rg-eyebrow">{t.quinze.eyebrow}</span>
+              <p className="rg-quinze__value">
+                {t.quinze.value}<span>{t.quinze.unit}</span>
+              </p>
+            </div>
+            <div className="rg-quinze__copy">
+              <h2>{t.quinze.title}</h2>
+              <p>{t.quinze.body}</p>
+            </div>
+          </div>
+          <div className="rg-compare">
+            <div className="rg-compare__today">
+              <span className="rg-eyebrow">{t.quinze.before}</span>
+              <ul>{t.quinze.beforeItems.map(item => <li key={item}>{item}</li>)}</ul>
+            </div>
+            <div className="rg-compare__remparia">
+              <span className="rg-eyebrow">{t.quinze.after}</span>
+              <ul>{t.quinze.afterItems.map(item => <li key={item}>{item}</li>)}</ul>
+            </div>
+          </div>
+        </section>
+
+        <section className="rg-section rg-proof" id="chiffres" aria-labelledby="proof-title">
+          <div className="rg-proof__head">
+            <span className="rg-eyebrow">{t.proof.eyebrow}</span>
+            <div className="rg-proof__intro">
+              <h2 id="proof-title">{t.proof.title}</h2>
+              <p>{t.proof.body}</p>
+            </div>
+          </div>
+          <ul className="rg-proof__grid">
+            {t.proof.stats.map(stat => (
+              <li key={stat.value} className="rg-proof__item">
+                <strong className="rg-proof__value">{stat.value}</strong>
+                <p>{stat.text}</p>
+              </li>
+            ))}
+          </ul>
+          <p className="rg-proof__source">{t.proof.source}</p>
+        </section>
+
+        <section className="rg-section rg-trust" id="confiance">
+          <div className="rg-trust__visual">
+            <img src="/assets/ged/ged-trust-human-v2.png" alt={t.trust.alt} loading="lazy" />
+            <span className="rg-eyebrow">{t.trust.visual}</span>
+          </div>
+          <div className="rg-trust__copy">
+            <span className="rg-eyebrow">{t.trust.eyebrow}</span>
+            <h2>{t.trust.title}</h2>
+            {t.trust.items.map(item => (
+              <div className="rg-trust-item" key={item.n}>
+                <span className="rg-trust-item__num">{item.n}</span>
+                <div>
+                  <h3>{item.h}</h3>
+                  <p>{item.p}</p>
+                </div>
+              </div>
+            ))}
+            <a className="rg-text-link" href="#faq">{t.trust.faqLink} <Arrow /></a>
+          </div>
+        </section>
+
+        <section className="rg-section rg-pilot" id="cercle">
+          <div className="rg-pilot__copy">
+            <span className="rg-eyebrow"><i />{t.cercle.eyebrow}</span>
+            <h2>{t.cercle.title}</h2>
+            <p>{t.cercle.body}</p>
+            <div className="rg-pilot__perks">
+              {t.cercle.perks.map(item => (
+                <span key={item}><Check /> {item}</span>
+              ))}
+            </div>
+          </div>
+          <div className="rg-pilot-card">
+            <div className="rg-pilot-card__top">
+              <span>{t.cercle.open}</span>
+              <span>{lang === "fr" ? "PLACES LIMITÉES" : "LIMITED PLACES"}</span>
+            </div>
+            <span className="rg-pilot-card__asterisk" aria-hidden="true">✳</span>
+            <h3>{t.cercle.get}</h3>
+            <div className="rg-pilot__perks rg-pilot-card__perks">
+              {t.cercle.perks.map(item => (
+                <span key={item}><Check /> {item}</span>
+              ))}
+            </div>
+            <button className="rg-button rg-button--dark" type="button" onClick={() => setApplicationOpen(true)}>
+              {t.cercle.cta} <Arrow diagonal />
+            </button>
+            <p>{t.cercle.note}</p>
+          </div>
+        </section>
+
+        <section className="rg-section rg-faq" id="faq">
+          <div className="rg-faq__intro">
+            <span className="rg-eyebrow">{t.faq.eyebrow}</span>
+            <h2>{t.faq.title}</h2>
+          </div>
+          <div className="rg-faq__panel">
+            <div className="rg-faq__list">
+              {t.faq.items.map(([question, answer], index) => (
+                <div className="rg-faq__item" key={question}>
+                  <h3>
+                    <button
+                      type="button"
+                      aria-expanded={openFaq === index}
+                      aria-controls={`faq-answer-${index}`}
+                      id={`faq-question-${index}`}
+                      onClick={() => setOpenFaq(openFaq === index ? null : index)}
+                    >
+                      <span>{question}</span>
+                      <span aria-hidden="true">{openFaq === index ? "−" : "+"}</span>
+                    </button>
+                  </h3>
+                  <div id={`faq-answer-${index}`} role="region" aria-labelledby={`faq-question-${index}`} hidden={openFaq !== index}>
+                    <p>{answer}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <a className="rg-text-link" href="mailto:contact@remparia.com">{t.faq.more} <Arrow diagonal /></a>
+          </div>
+        </section>
+
+        <section className="rg-section rg-closing" id="suite" aria-labelledby="closing-title">
+          <div className="rg-closing__copy">
+            <h2 id="closing-title">{t.closing.title}</h2>
+            <a className="rg-button rg-button--dark" href="#cercle">
+              {t.closing.cta} <Arrow diagonal />
+            </a>
+          </div>
+          <figure className="rg-closing__media">
             <video
               ref={faqVideoRef}
-              className="rg-faq__video"
+              className="rg-closing__video"
               src="/assets/ged/faq-questions.mp4"
               playsInline
               muted
@@ -295,26 +847,27 @@ export function GedLandingPage() {
               tabIndex={-1}
             />
           </figure>
-          <div className="rg-faq__panel">
-            <div className="rg-faq__list">{faqs.map(([question, answer], index) => (
-              <div className="rg-faq__item" key={question}>
-                <h3>
-                  <button type="button" aria-expanded={openFaq === index} aria-controls={`faq-answer-${index}`} id={`faq-question-${index}`} onClick={() => setOpenFaq(openFaq === index ? null : index)}>
-                    <span>{question}</span>
-                    <span aria-hidden="true">{openFaq === index ? "−" : "+"}</span>
-                  </button>
-                </h3>
-                <div id={`faq-answer-${index}`} role="region" aria-labelledby={`faq-question-${index}`} hidden={openFaq !== index}>
-                  <p>{answer}</p>
-                </div>
-              </div>
-            ))}</div>
-            <a className="rg-text-link" href="mailto:contact@remparia.com">{lang === "fr" ? "Une autre question ?" : "Another question?"} <Arrow diagonal /></a>
+        </section>
+      </main>
+
+      <FounderApplicationModal open={applicationOpen} onClose={() => setApplicationOpen(false)} lang={lang} />
+
+      <footer className="rg-footer">
+        <div className="rg-container">
+          <div className="rg-footer__top">
+            <a className="rg-brand" href="https://www.remparia.com/fr" aria-label="Remparia">
+              <img src="/assets/ged/remparia-logo.png" alt="Remparia" />
+            </a>
+            <p>{t.footer.tagline}</p>
+            <a className="rg-text-link" href="#cercle">{t.footer.cta} <Arrow diagonal /></a>
+          </div>
+          <div className="rg-footer__bottom">
+            <span>© {new Date().getFullYear()} Remparia</span>
+            <span>{t.footer.slogan}</span>
+            <a href="https://www.remparia.com/fr">{t.footer.site} <Arrow diagonal /></a>
           </div>
         </div>
-      </section>
-    </main>
-    <FounderApplicationModal open={applicationOpen} onClose={() => setApplicationOpen(false)} lang={lang} />
-    <footer className="rg-footer"><div className="rg-container"><div className="rg-footer__top"><a className="rg-brand" href="https://www.remparia.com/fr" aria-label="Remparia"><img src="/assets/ged/remparia-logo.png" alt="Remparia" /></a><p>{lang === "fr" ? <>Commencez par vos documents.<br />Imaginez la suite.</> : <>Start with your documents.<br />Imagine what comes next.</>}</p><a className="rg-text-link" href="#pilote">{lang === "fr" ? "Rejoindre le cercle fondateur" : "Join the founding circle"} <Arrow diagonal /></a></div><div className="rg-footer__bottom"><span>© {new Date().getFullYear()} Remparia</span><span>{lang === "fr" ? "Intelligence humaine. Échelle artificielle." : "Human intelligence. Artificial scale."}</span><a href="https://www.remparia.com/fr">{lang === "fr" ? "Le site Remparia" : "Remparia website"} <Arrow diagonal /></a></div></div></footer>
-  </div>;
+      </footer>
+    </div>
+  );
 }

@@ -4,11 +4,11 @@ import "../src/ged-landing.css";
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://ged.remparia.com"),
   title: {
-    default: "Remparia GED — Vos documents, enfin utiles.",
+    default: "Remparia GED — Retrouvez n’importe quel document en moins de 15 secondes.",
     template: "%s · Remparia GED",
   },
   description:
-    "Remparia GED aide les dirigeants de TPE-PME à rassembler, retrouver et faire travailler leurs documents — avec un cercle fondateur pour co-construire le produit.",
+    "Remparia GED classe chaque document dès son dépôt, vérifie qu’il ne vous en manque aucun et le conserve le temps exigé par la loi. Un agent IA répond à vos questions, sources à l’appui.",
   alternates: {
     canonical: "/",
     languages: {
@@ -20,17 +20,17 @@ export const metadata: Metadata = {
     type: "website",
     locale: "fr_FR",
     alternateLocale: ["en_US"],
-    title: "Remparia GED — Vos documents, enfin utiles.",
+    title: "Remparia GED — Retrouvez n’importe quel document en moins de 15 secondes.",
     description:
-      "Rassemblez vos documents, retrouvez ce qui compte et avancez — sans une nouvelle arborescence à gérer.",
+      "Classez, complétez et conservez vos documents. Un agent IA répond à vos questions, sources à l’appui. Hébergé en France.",
     siteName: "Remparia GED",
     images: [{ url: "/assets/ged/ged-hero-human-v2.png", width: 1024, height: 576, alt: "Remparia GED" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Remparia GED — Vos documents, enfin utiles.",
+    title: "Remparia GED — Retrouvez n’importe quel document en moins de 15 secondes.",
     description:
-      "Rassemblez vos documents, retrouvez ce qui compte et avancez — sans une nouvelle arborescence à gérer.",
+      "Classez, complétez et conservez vos documents. Un agent IA répond à vos questions, sources à l’appui. Hébergé en France.",
     images: ["/assets/ged/ged-hero-human-v2.png"],
   },
   robots: {

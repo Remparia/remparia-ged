@@ -4,14 +4,14 @@ import { useEffect, useRef, useState } from "react";
 import { getFilmProgress, getFilmTime } from "./filmTimeline";
 
 const chaptersFr = [
-  { label: "01 / RETROUVER", title: "Une question. Pas vingt dossiers.", text: "Interrogez vos documents avec vos mots, depuis votre bureau ou votre téléphone." },
-  { label: "02 / COMPRENDRE", title: "La réponse, avec la preuve.", text: "Retrouvez l’information utile et revenez au document qui la justifie." },
-  { label: "03 / AVANCER", title: "Moins chercher. Mieux travailler.", text: "Du document à la prochaine étape, gardez la main sur ce qui compte." },
+  { label: "01 / CLASSER", title: "Vous déposez. Le classement se fait seul.", text: "Remparia reconnaît le document, le range et en extrait les informations utiles." },
+  { label: "02 / DEMANDER", title: "Un agent qui connaît vos documents.", text: "Posez vos questions en français. Chaque réponse cite ses sources." },
+  { label: "03 / RETROUVER", title: "En 15 secondes. Pas une matinée.", text: "Le bon document, dans sa dernière version, avec le dossier où il est rangé." },
 ];
 const chaptersEn = [
-  { label: "01 / FIND", title: "One question. Not twenty folders.", text: "Ask your documents in your own words, from your desk or your phone." },
-  { label: "02 / UNDERSTAND", title: "The answer, with evidence.", text: "Find the useful information and return to the document that supports it." },
-  { label: "03 / MOVE FORWARD", title: "Search less. Work better.", text: "From document to next step, stay in control of what matters." },
+  { label: "01 / FILE", title: "You upload. Filing happens on its own.", text: "Remparia recognizes the document, files it and extracts useful fields." },
+  { label: "02 / ASK", title: "An agent that knows your documents.", text: "Ask in plain language. Every answer cites its sources." },
+  { label: "03 / FIND", title: "In 15 seconds. Not a morning.", text: "The right document, in its latest version, with the folder where it lives." },
 ];
 
 /** The film is paused: the page's scroll position, not a clock, controls its time. */
