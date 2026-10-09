@@ -25,6 +25,10 @@ export class HttpError extends Error {
   }
 }
 
+function optionalString(value: unknown, fallback: string) {
+  return typeof value === "string" && value.trim() ? value.trim() : fallback;
+}
+
 export function validateFounderApplication(value: unknown): FounderApplication {
   if (!value || typeof value !== "object") throw new HttpError("Formulaire incomplet");
   const body = value as Record<string, unknown>;
@@ -36,12 +40,6 @@ export function validateFounderApplication(value: unknown): FounderApplication {
     "jobTitle",
     "companySize",
     "industry",
-    "primaryChallenge",
-    "monthlyVolume",
-    "useCase",
-    "involvementRole",
-    "interviewAvailability",
-    "codesignCommitment",
     "consent",
   ];
   for (const key of required) {
@@ -52,22 +50,33 @@ export function validateFounderApplication(value: unknown): FounderApplication {
   if (!/^\S+@\S+\.\S+$/.test(String(body.workEmail))) {
     throw new HttpError("Email professionnel invalide");
   }
-  if (String(body.useCase).trim().length < 60) {
-    throw new HttpError("Le cas concret doit comporter au moins 60 caractères");
-  }
   if (body.consent !== "yes") throw new HttpError("Consentement requis");
 
   return {
-    ...(body as FounderApplication),
+    firstName: String(body.firstName),
+    lastName: String(body.lastName),
+    workEmail: String(body.workEmail),
+    companyName: String(body.companyName),
+    jobTitle: String(body.jobTitle),
+    companySize: String(body.companySize),
+    industry: String(body.industry),
     documentLocations: Array.isArray(body.documentLocations)
       ? body.documentLocations.map(String).slice(0, 10)
       : [],
+    primaryChallenge: optionalString(body.primaryChallenge, "Non précisé"),
+    monthlyVolume: optionalString(body.monthlyVolume, "Non précisé"),
+    useCase: optionalString(body.useCase, "Non précisé — rendez-vous demandé via le formulaire court."),
+    involvementRole: optionalString(body.involvementRole, "Non précisé"),
+    interviewAvailability: optionalString(body.interviewAvailability, "yes"),
+    codesignCommitment: optionalString(body.codesignCommitment, "maybe"),
+    consent: "yes",
+    website: typeof body.website === "string" ? body.website : undefined,
   };
 }
 
 export function qualifyFounderApplication(a: FounderApplication) {
-  let score = 0;
-  const reasons: string[] = [];
+  let score = 40;
+  const reasons: string[] = ["formulaire court — rendez-vous demandé"];
   if (["Je décide", "Je pilote le processus", "I make decisions", "I lead the process"].includes(a.involvementRole)) {
     score += 25;
     reasons.push("responsable proche de la décision");
@@ -75,22 +84,10 @@ export function qualifyFounderApplication(a: FounderApplication) {
   if (a.interviewAvailability === "yes") {
     score += 20;
     reasons.push("disponible pour un entretien");
-  } else if (a.interviewAvailability === "maybe") score += 8;
-  if (a.codesignCommitment === "yes") {
-    score += 25;
-    reasons.push("disponible pour la co-construction");
-  } else if (a.codesignCommitment === "maybe") score += 10;
-  if (!a.monthlyVolume.startsWith("Moins") && !a.monthlyVolume.startsWith("Fewer")) {
-    score += 15;
-    reasons.push("volume documentaire significatif");
   }
-  if (a.useCase.trim().length >= 120) {
+  if (a.companySize !== "1–9") {
     score += 10;
-    reasons.push("cas d’usage détaillé");
-  }
-  if (a.documentLocations.length >= 2) {
-    score += 5;
-    reasons.push("documents dispersés");
+    reasons.push("taille d’entreprise significative");
   }
   return {
     score,
@@ -122,18 +119,9 @@ export function buildFounderApplicationEmail(
     `Taille : ${application.companySize}`,
     `Secteur : ${application.industry}`,
     "",
-    "— Documents —",
-    `Emplacements : ${application.documentLocations.length ? application.documentLocations.join(", ") : "—"}`,
-    `Blocage principal : ${application.primaryChallenge}`,
-    `Volume mensuel : ${application.monthlyVolume}`,
-    "",
-    "Cas concret :",
-    application.useCase.trim(),
-    "",
-    "— Participation —",
-    `Rôle : ${application.involvementRole}`,
-    `Entretien 30–45 min : ${label(application.interviewAvailability)}`,
-    `Ateliers co-construction : ${label(application.codesignCommitment)}`,
+    "— Suite —",
+    `Entretien : ${label(application.interviewAvailability)}`,
+    "Le dirigeant a demandé un créneau Koalendar après le formulaire court.",
   ];
 
   return {

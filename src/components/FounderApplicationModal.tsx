@@ -4,7 +4,6 @@ import { FormEvent, useEffect, useRef, useState } from "react";
 
 type Props = { open: boolean; onClose: () => void; lang?: "fr" | "en" };
 const industriesFr = ["BTP", "Services / PME", "Retail", "Immobilier", "Droit / conseil", "Industrie / manufacturing", "Autre"];
-const challengesFr = ["Retrouver la bonne version", "Suivre les pièces manquantes", "Anticiper les échéances", "Sécuriser les accès", "Fluidifier les validations", "Transmettre la connaissance"];
 const KOALENDAR_URL = "https://koalendar.com/e/rencontrer-contact-remparia";
 
 export function FounderApplicationModal({ open, onClose, lang = "fr" }: Props) {
@@ -12,7 +11,6 @@ export function FounderApplicationModal({ open, onClose, lang = "fr" }: Props) {
   const [state, setState] = useState<"idle" | "sending" | "error">("idle");
   const tr = (fr: string, en: string) => (lang === "fr" ? fr : en);
   const industries = lang === "fr" ? industriesFr : ["Construction", "Services / SMEs", "Retail", "Real estate", "Legal / advisory", "Manufacturing", "Other"];
-  const challenges = lang === "fr" ? challengesFr : ["Find the right version", "Track missing documents", "Anticipate deadlines", "Secure access", "Streamline approvals", "Transfer knowledge"];
 
   useEffect(() => {
     const d = dialogRef.current;
@@ -26,14 +24,12 @@ export function FounderApplicationModal({ open, onClose, lang = "fr" }: Props) {
     setState("sending");
     const form = event.currentTarget;
     const data = new FormData(form);
-    const documentLocations = data.getAll("documentLocations");
     const payload = Object.fromEntries(data.entries());
-    delete payload.documentLocations;
     try {
       const response = await fetch("/api/founder-applications", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ ...payload, documentLocations }),
+        body: JSON.stringify({ ...payload, documentLocations: [] }),
       });
       if (!response.ok) throw new Error();
       const result = (await response.json().catch(() => ({}))) as { bookingUrl?: string };
@@ -72,8 +68,8 @@ export function FounderApplicationModal({ open, onClose, lang = "fr" }: Props) {
           </h2>
           <p>
             {tr(
-              "Environ 3 minutes. Il n’y a ni achat, ni engagement. Chaque candidature est relue par notre équipe.",
-              "About 3 minutes. There is no purchase or commitment. Every application is reviewed by our team.",
+              "Moins d’une minute. Il n’y a ni achat, ni engagement. Puis choisissez un créneau pour échanger.",
+              "Less than a minute. There is no purchase or commitment. Then pick a slot to talk.",
             )}
           </p>
         </header>
@@ -131,105 +127,6 @@ export function FounderApplicationModal({ open, onClose, lang = "fr" }: Props) {
                 </select>
               </label>
             </div>
-          </fieldset>
-          <fieldset>
-            <legend>
-              <b>02</b>
-              <span>
-                {tr("Votre réalité documentaire", "Your document reality")}
-                <small>{tr("Pour vérifier que nous pouvons résoudre un vrai problème.", "To check that we can solve a real problem.")}</small>
-              </span>
-            </legend>
-            <label>
-              {tr("Où vivent aujourd’hui vos documents ?", "Where do your documents live today?")}
-              <span className="rg-form-hint">{tr("Plusieurs réponses possibles", "Select all that apply")}</span>
-              <span className="rg-form-checks">
-                {(lang === "fr"
-                  ? ["Emails", "Dossiers partagés", "SharePoint / Drive", "Outils métier", "Ordinateurs locaux", "Papier"]
-                  : ["Emails", "Shared folders", "SharePoint / Drive", "Business tools", "Local computers", "Paper"]
-                ).map(x => (
-                  <span key={x}>
-                    <input type="checkbox" name="documentLocations" value={x} /> {x}
-                  </span>
-                ))}
-              </span>
-            </label>
-            <label>
-              {tr("Votre principal blocage", "Your main challenge")}
-              <select name="primaryChallenge" required defaultValue="">
-                <option value="" disabled>{tr("Choisir le plus important", "Choose the most important")}</option>
-                {challenges.map(x => (
-                  <option key={x}>{x}</option>
-                ))}
-              </select>
-            </label>
-            <label>
-              {tr("Volume traité chaque mois", "Monthly document volume")}
-              <select name="monthlyVolume" required defaultValue="">
-                <option value="" disabled>{tr("Une estimation suffit", "An estimate is enough")}</option>
-                <option>{tr("Moins de 100 documents", "Fewer than 100 documents")}</option>
-                <option>100–500</option>
-                <option>500–2,000</option>
-                <option>{tr("Plus de 2 000 documents", "More than 2,000 documents")}</option>
-              </select>
-            </label>
-            <label>
-              {tr("Racontez-nous un cas concret", "Tell us about a real use case")}
-              <textarea
-                name="useCase"
-                required
-                minLength={60}
-                maxLength={700}
-                rows={5}
-                placeholder={tr(
-                  "Ex. Nous perdons du temps à vérifier les attestations de nos sous-traitants avant chaque chantier…",
-                  "For example, we lose time checking subcontractor certificates before every project…",
-                )}
-              />
-              <span className="rg-form-hint">
-                {tr(
-                  "Une situation précise nous aide davantage qu’une liste de fonctionnalités.",
-                  "A specific situation helps us more than a feature list.",
-                )}
-              </span>
-            </label>
-          </fieldset>
-          <fieldset>
-            <legend>
-              <b>03</b>
-              <span>
-                {tr("Votre participation", "Your participation")}
-                <small>{tr("Pour construire avec des personnes réellement impliquées.", "To build with people who are genuinely involved.")}</small>
-              </span>
-            </legend>
-            <label>
-              {tr("Quel est votre rôle dans ce sujet ?", "What is your role in this topic?")}
-              <select name="involvementRole" required defaultValue="">
-                <option value="" disabled>{tr("Choisir", "Choose")}</option>
-                <option>{tr("Je décide", "I make decisions")}</option>
-                <option>{tr("Je pilote le processus", "I lead the process")}</option>
-                <option>{tr("Je l’utilise au quotidien", "I use it daily")}</option>
-                <option>{tr("J’accompagne les équipes", "I support the teams")}</option>
-              </select>
-            </label>
-            <label>
-              {tr("Pouvez-vous participer à un échange de 30–45 minutes ?", "Can you join a 30–45 minute conversation?")}
-              <select name="interviewAvailability" required defaultValue="">
-                <option value="" disabled>{tr("Choisir", "Choose")}</option>
-                <option value="yes">{tr("Oui", "Yes")}</option>
-                <option value="maybe">{tr("Peut-être, selon les dates", "Maybe, depending on dates")}</option>
-                <option value="no">{tr("Non", "No")}</option>
-              </select>
-            </label>
-            <label>
-              {tr("Et à 2 ou 3 ateliers de co-construction sur 6–8 semaines ?", "And 2 or 3 co-design workshops over 6–8 weeks?")}
-              <select name="codesignCommitment" required defaultValue="">
-                <option value="" disabled>{tr("Choisir", "Choose")}</option>
-                <option value="yes">{tr("Oui", "Yes")}</option>
-                <option value="maybe">{tr("Peut-être", "Maybe")}</option>
-                <option value="no">{tr("Non", "No")}</option>
-              </select>
-            </label>
           </fieldset>
           <label className="rg-form-consent">
             <input type="checkbox" name="consent" value="yes" required />
