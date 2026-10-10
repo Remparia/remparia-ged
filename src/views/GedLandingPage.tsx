@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import { CookieBanner, openCookiePreferences } from "../components/CookieBanner";
-import { EcosystemMap } from "../components/EcosystemMap";
 import { ScrollFilm } from "../components/ScrollFilm";
 import { FounderApplicationModal } from "../components/FounderApplicationModal";
 
@@ -174,18 +173,8 @@ const copy = {
       note: "Les connexions se déploient progressivement, selon vos priorités et le cadre de sécurité défini avec vous.",
       aria: "Outils connectables",
     },
-    os: {
-      eyebrow: "07 / COMMENCER SIMPLE. VOIR PLUS LOIN.",
-      title: <>Votre GED aujourd’hui.<br /><span>Votre OS demain.</span></>,
-      body: "Pas besoin d’acheter une plateforme entière pour commencer. Vos documents sont la première étape d’un environnement qui pourra relier vos équipes, vos outils et vos actions.",
-      steps: [
-        { label: "LE POINT DE DÉPART", title: "Remparia GED", text: "Rassembler, classer,\nretrouver les informations.", phase: "PROGRAMME PILOTE", future: false },
-        { label: "L’ÉTAPE SUIVANTE", title: "Des dossiers vivants", text: "Relier les pièces, les échéances,\nles responsables et les validations.", phase: "EXTENSION PROGRESSIVE", future: true },
-        { label: "À L’ÉCHELLE DE L’ENTREPRISE", title: "RempariaOS", text: "Connecter vos outils et orchestrer\ndes actions sous contrôle humain.", phase: "VISION PRODUIT", future: true },
-      ],
-    },
     proof: {
-      eyebrow: "08 / LE TERRAIN LE CONFIRME",
+      eyebrow: "07 / LE TERRAIN LE CONFIRME",
       title: <>Vous n’êtes pas seuls.<br /><span>Le moment est maintenant.</span></>,
       body: "Sécurité des données, IA documentaire, facturation électronique : les priorités des TPE-PME rejoignent exactement ce que Remparia GED prépare avec vous.",
       source: "Source : Baromètre France Num 2026.",
@@ -196,7 +185,7 @@ const copy = {
       ],
     },
     trust: {
-      eyebrow: "09 / CONFIANCE",
+      eyebrow: "08 / CONFIANCE",
       visual: "VOTRE ENTREPRISE. VOS DROITS. VOS CHOIX.",
       title: <>Une IA utile.<br /><span>Un cadre clair.</span></>,
       items: [
@@ -223,12 +212,11 @@ const copy = {
       note: "Un échange de 30 minutes, sans engagement.",
     },
     faq: {
-      eyebrow: "10 / FAQ",
+      eyebrow: "09 / FAQ",
       title: <>Les questions<br /><span>qui comptent.</span></>,
       more: "Une autre question ?",
       items: [
         ["Faut-il tout migrer d’un coup ?", "Non. Vous commencez par les nouveaux documents et vous reprenez l’historique à votre rythme. Nous pouvons vous y aider."],
-        ["L’IA voit-elle tous mes documents ?", "Elle ne voit que ce que les droits de l’utilisateur permettent, et chaque réponse cite ses sources."],
         ["Où sont hébergés mes documents ?", "En France, sur notre propre infrastructure."],
         ["Est-ce que ça remplace ma plateforme de facture électronique ?", "Non. Votre plateforme agréée envoie et reçoit les factures. Remparia les range et les conserve avec tous vos autres documents de gestion."],
         ["Combien ça coûte ?", "Un abonnement par utilisateur et par mois, avec l’espace de stockage et des crédits IA inclus. Les membres du cercle fondateur bénéficient d’un tarif préférentiel."],
@@ -396,18 +384,8 @@ const copy = {
       note: "Connections roll out progressively, according to your priorities and the security framework agreed with you.",
       aria: "Connectable tools",
     },
-    os: {
-      eyebrow: "07 / START SIMPLE. THINK AHEAD.",
-      title: <>Your DMS today.<br /><span>Your OS tomorrow.</span></>,
-      body: "You do not need to buy an entire platform to get started. Your documents are the first step toward an environment connecting your teams, tools and actions.",
-      steps: [
-        { label: "THE STARTING POINT", title: "Remparia DMS", text: "Gather, organize and\nfind information.", phase: "PILOT PROGRAM", future: false },
-        { label: "THE NEXT STEP", title: "Living files", text: "Connect documents, deadlines,\nowners and approvals.", phase: "PROGRESSIVE EXTENSION", future: true },
-        { label: "ACROSS THE BUSINESS", title: "RempariaOS", text: "Connect your tools and orchestrate\nhuman-controlled actions.", phase: "PRODUCT VISION", future: true },
-      ],
-    },
     proof: {
-      eyebrow: "08 / THE FIELD CONFIRMS IT",
+      eyebrow: "07 / THE FIELD CONFIRMS IT",
       title: <>You’re not alone.<br /><span>The moment is now.</span></>,
       body: "Data security, document AI, e-invoicing: small-business priorities match exactly what Remparia DMS is building with you.",
       source: "Source: France Num 2026 Barometer.",
@@ -418,7 +396,7 @@ const copy = {
       ],
     },
     trust: {
-      eyebrow: "09 / TRUST",
+      eyebrow: "08 / TRUST",
       visual: "YOUR BUSINESS. YOUR RIGHTS. YOUR CHOICES.",
       title: <>Useful AI.<br /><span>A clear framework.</span></>,
       items: [
@@ -445,12 +423,11 @@ const copy = {
       note: "A 30-minute conversation, with no commitment.",
     },
     faq: {
-      eyebrow: "10 / FAQ",
+      eyebrow: "09 / FAQ",
       title: <>The questions<br /><span>that matter.</span></>,
       more: "Another question?",
       items: [
         ["Do I have to migrate everything at once?", "No. You start with new documents and catch up on history at your own pace. We can help."],
-        ["Does the AI see all my documents?", "It only sees what the user’s permissions allow, and every answer cites its sources."],
         ["Where are my documents hosted?", "In France, on our own infrastructure."],
         ["Does this replace my e-invoicing platform?", "No. Your accredited platform sends and receives invoices. Remparia files and retains them with all your other management documents."],
         ["How much does it cost?", "A per-user monthly subscription, with storage and AI credits included. Founding-circle members get preferential pricing."],
@@ -813,34 +790,6 @@ export function GedLandingPage() {
             ))}
           </ul>
           <p className="rg-connectors__note">{t.connectors.note}</p>
-        </section>
-
-        <section className="rg-os" id="remparia-os">
-          <div className="rg-section">
-            <div className="rg-os__heading">
-              <span className="rg-eyebrow">{t.os.eyebrow}</span>
-              <h2>{t.os.title}</h2>
-              <p>{t.os.body}</p>
-            </div>
-            <EcosystemMap lang={lang} />
-            <div className="rg-os__roadmap">
-              {t.os.steps.flatMap((step, index) => {
-                const card = (
-                  <div key={step.title}>
-                    <small>{step.label}</small>
-                    <h3>{step.title}</h3>
-                    <p style={{ whiteSpace: "pre-line" }}>{step.text}</p>
-                    <span className={step.future ? "rg-phase rg-phase--future" : "rg-phase"}>{step.phase}</span>
-                  </div>
-                );
-                if (index === 0) return [card];
-                return [
-                  <span className="rg-roadmap-arrow" aria-hidden="true" key={`arrow-${step.title}`}>→</span>,
-                  card,
-                ];
-              })}
-            </div>
-          </div>
         </section>
 
         <section className="rg-section rg-proof" id="chiffres" aria-labelledby="proof-title">

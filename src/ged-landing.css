@@ -51,9 +51,12 @@ body:has(.remparia-landing) { margin: 0; background: #eef4e0; }
   padding: 12px 18px;
   border: 1px solid var(--rg-ink);
   border-radius: 100px;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 22px;
+  gap: 12px;
+  flex-shrink: 0;
+  white-space: nowrap;
+  line-height: 1.2;
   background: var(--rg-ink);
   color: #fff !important;
   transition: background .2s, transform .2s;
@@ -844,8 +847,27 @@ body:has(.remparia-landing) { margin: 0; background: #eef4e0; }
 @media (max-width: 1100px) {
   .rg-container, .rg-section { width: calc(100% - 72px); }
   .rg-header__inner { width: calc(100% - 48px); }
-  .rg-header nav { gap: 22px; font-size: 11px; }
-  .rg-nav-cta { gap: 12px; padding-inline: 14px; }
+  .rg-menu-toggle { display: block; margin-left: auto; background: transparent; border: 1px solid var(--rg-line); border-radius: 30px; padding: 8px 13px; font-size: 11px; }
+  .rg-header nav > .rg-language-toggle { margin-top: 14px; align-self: flex-start; }
+  .rg-header nav {
+    display: none;
+    position: absolute;
+    top: 79px;
+    left: 0;
+    width: 100%;
+    background: var(--rg-paper);
+    padding: 20px;
+    border-bottom: 1px solid var(--rg-line);
+  }
+  .rg-header nav.is-open { display: flex; flex-direction: column; align-items: stretch; gap: 0; }
+  .rg-header nav > a { padding: 14px 10px; }
+  .remparia-landing a.rg-nav-cta {
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 12px;
+    padding: 13px 18px;
+    white-space: normal;
+  }
   .rg-hero { min-height: 680px; }
   .rg-hero h1 { font-size: clamp(48px, 6vw, 66px); }
   .rg-hero__bg > img { width: min(68vw, 760px); right: max(-48px, calc(50% - 620px)); }
@@ -874,16 +896,7 @@ body:has(.remparia-landing) { margin: 0; background: #eef4e0; }
   .rg-header__inner { width: calc(100% - 40px); gap: 16px; }
   .rg-brand img { height: 24px; }
   .rg-header__product { padding-left: 15px; }
-  .rg-menu-toggle { display: block; margin-left: auto; background: transparent; border: 1px solid var(--rg-line); border-radius: 30px; padding: 8px 13px; font-size: 11px; }
-  .rg-header nav > .rg-language-toggle { margin-top: 14px; align-self: flex-start; }
-  .rg-header nav { display: none; position: absolute; top: 67px; left: 0; width: 100%; background: var(--rg-paper); padding: 20px; border-bottom: 1px solid var(--rg-line); }
-  .rg-header nav.is-open { display: flex; flex-direction: column; align-items: stretch; gap: 0; }
-  .rg-header nav > a { padding: 14px 10px; }
-  .remparia-landing a.rg-nav-cta {
-    justify-content: space-between;
-    margin-top: 12px;
-    padding: 13px 18px;
-  }
+  .rg-header nav { top: 67px; }
   .rg-hero { padding-top: 48px; padding-bottom: 28px; min-height: 0; }
   .rg-hero__inner { grid-template-columns: 1fr; min-height: 0; }
   .rg-hero__bg {
